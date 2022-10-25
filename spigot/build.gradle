@@ -1,0 +1,19 @@
+dependencies {
+    compileOnly(
+            'org.projectlombok:lombok:1.18.24',
+            'org.jetbrains:annotations:23.0.0',
+            'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    )
+    annotationProcessor('org.projectlombok:lombok:1.18.24')
+    implementation(project(':api'))
+}
+
+processResources {
+    filesMatching('**/plugin.yml') {
+        expand 'version': project.version
+    }
+}
+
+shadowJar {
+    archiveFileName = rootProject.name + '-v' + project.version + '.jar'
+}

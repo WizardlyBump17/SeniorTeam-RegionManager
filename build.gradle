@@ -1,0 +1,25 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    targetCompatibility = '17'
+    sourceCompatibility = '17'
+
+    group = 'com.wizardlybump17.seniorteam.regionmanager'
+    version = '1.0.0'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    tasks {
+        compileJava {
+            options.encoding = 'UTF-8'
+        }
+    }
+}

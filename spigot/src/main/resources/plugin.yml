@@ -1,0 +1,4 @@
+name: Region
+main: com.wizardlybump17.seniorteam.regionmamager.RegionManager
+version: '${version}'
+author: WizardlyBump17

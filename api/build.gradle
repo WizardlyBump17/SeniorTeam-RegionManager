@@ -5,6 +5,7 @@ dependencies {
             'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT',
             'com.wizardlybump17.wlib:objects:1.5.0',
             'com.wizardlybump17.wlib:utils:1.5.0',
+            'com.wizardlybump17.wlib:database:1.5.0',
     )
     annotationProcessor('org.projectlombok:lombok:1.18.24')
 }

@@ -18,14 +18,16 @@ public class RegionFlag implements DatabaseStorable {
     private final String name;
     private final RegionFlagType<?> type;
     private RegionFlagValue<?> value;
+    private final String region;
     private boolean dirty;
     private boolean deleted;
     private boolean inDatabase;
 
-    public RegionFlag(String name, RegionFlagType<?> type, RegionFlagValue<?> value) {
+    public RegionFlag(String name, RegionFlagType<?> type, RegionFlagValue<?> value, String region) {
         this.name = name;
         this.type = type;
         this.value = value;
+        this.region = region;
     }
 
     public void setValue(RegionFlagValue<?> value) {
@@ -38,6 +40,7 @@ public class RegionFlag implements DatabaseStorable {
         data.put("name", name);
         data.put("type", type.getName());
         data.put("value", BukkitStreamsUtil.serialize(value));
+        data.put("region", region);
     }
 
     @Override
@@ -59,7 +62,8 @@ public class RegionFlag implements DatabaseStorable {
         return new RegionFlag(
                 set.getString("name"),
                 typeOptional.get(),
-                (RegionFlagValue<?>) BukkitStreamsUtil.deserialize(set.getBytes("value"))
+                (RegionFlagValue<?>) BukkitStreamsUtil.deserialize(set.getBytes("value")),
+                set.getString("region")
         );
     }
 }

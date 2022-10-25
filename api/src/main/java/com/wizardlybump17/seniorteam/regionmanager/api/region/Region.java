@@ -1,6 +1,7 @@
 package com.wizardlybump17.seniorteam.regionmanager.api.region;
 
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
+import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseStorable;
 import lombok.Data;
 import org.bukkit.util.Vector;
@@ -78,6 +79,20 @@ public class Region implements DatabaseStorable {
                         set.getInt("max_z")
                 ),
                 flags
+        );
+    }
+
+    public static void setupDatabase(Database<?> database) {
+        database.update("CREATE TABLE IF NOT EXISTS region (" +
+                "name VARCHAR(255) PRIMARY KEY NOT NULL, " +
+                "world VARCHAR(255) NOT NULL, " +
+                "min_x INTEGER NOT NULL, " +
+                "min_y INTEGER NOT NULL, " +
+                "min_z INTEGER NOT NULL, " +
+                "max_x INTEGER NOT NULL, " +
+                "max_y INTEGER NOT NULL, " +
+                "max_z INTEGER NOT NULL" +
+                ");"
         );
     }
 }

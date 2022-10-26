@@ -4,6 +4,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionFlagTypeCache
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
 import com.wizardlybump17.seniorteam.regionmanager.api.util.BukkitStreamsUtil;
+import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseStorable;
 import lombok.Data;
 
@@ -64,6 +65,16 @@ public class RegionFlag implements DatabaseStorable {
                 typeOptional.get(),
                 (RegionFlagValue<?>) BukkitStreamsUtil.deserialize(set.getBytes("value")),
                 set.getString("region")
+        );
+    }
+
+    public static void setupDatabase(Database<?> database) {
+        database.update("CREATE TABLE IF NOT EXISTS flag (" +
+                "name VARCHAR(255) PRIMARY KEY NOT NULL, " +
+                "type VARCHAR(255) NOT NULL, " +
+                "value BLOB NOT NULL, " +
+                "region VARCHAR(255) NOT NULL" + //foreign key
+                ");"
         );
     }
 }

@@ -4,6 +4,8 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseStorable;
 import lombok.Data;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 import java.sql.ResultSet;
@@ -62,6 +64,20 @@ public class Region implements DatabaseStorable {
     @Override
     public void deleteFromDatabase(Map<String, Object> data) {
         data.put("name", name);
+    }
+
+    public boolean isInside(Vector vector) {
+        return vector.isInAABB(minPos, maxPos);
+    }
+
+    public boolean isInside(Entity entity) {
+        return isInside(entity.getLocation());
+    }
+
+    public boolean isInside(Location location) {
+        if (location.getWorld() == null)
+            return false;
+        return location.getWorld().getName().equals(name) && isInside(location.toVector());
     }
 
     public static Region load(ResultSet set, Map<String, RegionFlag> flags) throws SQLException {

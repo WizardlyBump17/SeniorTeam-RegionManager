@@ -7,6 +7,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.util.BukkitStreamsUtil;
 import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseStorable;
 import lombok.Data;
+import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -53,6 +54,10 @@ public class RegionFlag implements DatabaseStorable {
     @Override
     public void deleteFromDatabase(Map<String, Object> data) {
         data.put("name", name);
+    }
+
+    public boolean test(Player player) {
+        return type.test(value.getValue(), player);
     }
 
     public static RegionFlag load(ResultSet set, RegionFlagTypeCache typeCache) throws SQLException {

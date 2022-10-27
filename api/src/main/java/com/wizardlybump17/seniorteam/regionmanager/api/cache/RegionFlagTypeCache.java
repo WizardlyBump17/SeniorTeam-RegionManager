@@ -8,15 +8,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class RegionFlagTypeCache extends Cache<String, RegionFlagType<?>, RegionFlagType<?>> {
+public class RegionFlagTypeCache extends Cache<String, RegionFlagType, RegionFlagType> {
 
     @Override
-    public @NotNull Pair<String, RegionFlagType<?>> apply(RegionFlagType<?> type) {
+    public @NotNull Pair<String, RegionFlagType> apply(RegionFlagType type) {
         return new Pair<>(type.getName().toLowerCase(), type);
     }
 
     @Override
-    public @NotNull Optional<RegionFlagType<?>> get(@Nullable String key) {
+    public @NotNull Optional<RegionFlagType> get(@Nullable String key) {
         return super.get(key == null ? null : key.toLowerCase());
     }
 
@@ -26,7 +26,7 @@ public class RegionFlagTypeCache extends Cache<String, RegionFlagType<?>, Region
     }
 
     @Override
-    public Optional<RegionFlagType<?>> remove(@Nullable String key) {
+    public Optional<RegionFlagType> remove(@Nullable String key) {
         return super.remove(key == null ? null : key.toLowerCase());
     }
 }

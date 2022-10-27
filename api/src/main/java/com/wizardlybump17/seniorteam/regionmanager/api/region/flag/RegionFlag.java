@@ -18,14 +18,14 @@ import java.util.Optional;
 public class RegionFlag implements DatabaseStorable {
 
     private final String name;
-    private final RegionFlagType<?> type;
+    private final RegionFlagType type;
     private RegionFlagValue<?> value;
     private final String region;
     private boolean dirty;
     private boolean deleted;
     private boolean inDatabase;
 
-    public RegionFlag(String name, RegionFlagType<?> type, RegionFlagValue<?> value, String region) {
+    public RegionFlag(String name, RegionFlagType type, RegionFlagValue<?> value, String region) {
         this.name = name;
         this.type = type;
         this.value = value;
@@ -57,11 +57,11 @@ public class RegionFlag implements DatabaseStorable {
     }
 
     public boolean test(Player player) {
-        return type.test(value.getValue(), player);
+        return type.test(value, player);
     }
 
     public static RegionFlag load(ResultSet set, RegionFlagTypeCache typeCache) throws SQLException {
-        Optional<RegionFlagType<?>> typeOptional = typeCache.get(set.getString("type"));
+        Optional<RegionFlagType> typeOptional = typeCache.get(set.getString("type"));
         if (typeOptional.isEmpty())
             return null;
 

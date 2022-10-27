@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public record RegionListener(RegionManager plugin) implements Listener {
 
-    private boolean testRegion(RegionFlagType<?> type, Location location, Player player) {
+    private boolean testRegion(RegionFlagType type, Location location, Player player) {
         for (Region region : plugin.getRegionCache().get(location)) {
             RegionFlag flag = region.getFlag(type);
             if (flag == null || flag.test(player))
@@ -41,7 +41,7 @@ public record RegionListener(RegionManager plugin) implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void interact(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        RegionFlagType<?> type;
+        RegionFlagType type;
         Location location;
         switch (event.getAction()) {
             case LEFT_CLICK_BLOCK -> {

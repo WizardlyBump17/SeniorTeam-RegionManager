@@ -83,7 +83,7 @@ public class Region implements DatabaseStorable {
     }
 
     @Nullable
-    public RegionFlag getFlag(RegionFlagType<?> type) {
+    public RegionFlag getFlag(RegionFlagType type) {
         return flags.get(type.getName());
     }
 

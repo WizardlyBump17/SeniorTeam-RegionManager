@@ -8,16 +8,16 @@ import org.bukkit.entity.Player;
 @UtilityClass
 public class RegionFlagTypes {
 
-    public static final RegionFlagType<BooleanFlagValue> BREAK_BLOCK = createBooleanFlagType("BREAK_BLOCK", "");
-    public static final RegionFlagType<BooleanFlagValue> PLACE_BLOCK = createBooleanFlagType("PLACE_BLOCK", "");
-    public static final RegionFlagType<BooleanFlagValue> LEFT_CLICK_AIR = createBooleanFlagType("LEFT_CLICK_AIR", "");
-    public static final RegionFlagType<BooleanFlagValue> LEFT_CLICK_BLOCK = createBooleanFlagType("LEFT_CLICK_BLOCK", "");
-    public static final RegionFlagType<BooleanFlagValue> RIGHT_CLICK_AIR = createBooleanFlagType("RIGHT_CLICK_AIR", "");
-    public static final RegionFlagType<BooleanFlagValue> RIGHT_CLICK_BLOCK = createBooleanFlagType("RIGHT_CLICK_BLOCK", "");
-    public static final RegionFlagType<BooleanFlagValue> INTERACT_PHYSICAL = createBooleanFlagType("INTERACT_PHYSICAL", "");
+    public static final RegionFlagType BREAK_BLOCK = createBooleanFlagType("BREAK_BLOCK", "");
+    public static final RegionFlagType PLACE_BLOCK = createBooleanFlagType("PLACE_BLOCK", "");
+    public static final RegionFlagType LEFT_CLICK_AIR = createBooleanFlagType("LEFT_CLICK_AIR", "");
+    public static final RegionFlagType LEFT_CLICK_BLOCK = createBooleanFlagType("LEFT_CLICK_BLOCK", "");
+    public static final RegionFlagType RIGHT_CLICK_AIR = createBooleanFlagType("RIGHT_CLICK_AIR", "");
+    public static final RegionFlagType RIGHT_CLICK_BLOCK = createBooleanFlagType("RIGHT_CLICK_BLOCK", "");
+    public static final RegionFlagType INTERACT_PHYSICAL = createBooleanFlagType("INTERACT_PHYSICAL", "");
 
-    private static RegionFlagType<BooleanFlagValue> createBooleanFlagType(String name, String permission) {
-        return new RegionFlagType<>() {
+    private static RegionFlagType createBooleanFlagType(String name, String permission) {
+        return new RegionFlagType() {
 
             @Override
             public String getName() {
@@ -30,12 +30,14 @@ public class RegionFlagTypes {
             }
 
             @Override
-            public boolean test(BooleanFlagValue value, Player player) {
+            public boolean test(RegionFlagValue<?> value, Player player) {
+                if (!(value instanceof BooleanFlagValue booleanValue))
+                    return false;
                 if (permission == null)
-                    return value.getValue();
+                    return booleanValue.getValue();
                 if (permission.isEmpty())
-                    return player.isOp() && value.getValue();
-                return value.getValue();
+                    return player.isOp() && booleanValue.getValue();
+                return booleanValue.getValue();
             }
         };
     }

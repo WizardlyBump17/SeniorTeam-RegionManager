@@ -14,6 +14,7 @@ public class RegionFlagTypes {
     public static final RegionFlagType<BooleanFlagValue> LEFT_CLICK_BLOCK = createBooleanFlagType("LEFT_CLICK_BLOCK", "");
     public static final RegionFlagType<BooleanFlagValue> RIGHT_CLICK_AIR = createBooleanFlagType("RIGHT_CLICK_AIR", "");
     public static final RegionFlagType<BooleanFlagValue> RIGHT_CLICK_BLOCK = createBooleanFlagType("RIGHT_CLICK_BLOCK", "");
+    public static final RegionFlagType<BooleanFlagValue> INTERACT_PHYSICAL = createBooleanFlagType("INTERACT_PHYSICAL", "");
 
     private static RegionFlagType<BooleanFlagValue> createBooleanFlagType(String name, String permission) {
         return new RegionFlagType<>() {

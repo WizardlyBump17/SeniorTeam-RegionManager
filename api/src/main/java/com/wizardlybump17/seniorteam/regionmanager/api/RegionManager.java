@@ -24,6 +24,7 @@ public abstract class RegionManager extends JavaPlugin {
         regionFlagTypeCache.add(RegionFlagTypes.LEFT_CLICK_BLOCK);
         regionFlagTypeCache.add(RegionFlagTypes.RIGHT_CLICK_AIR);
         regionFlagTypeCache.add(RegionFlagTypes.RIGHT_CLICK_BLOCK);
+        regionFlagTypeCache.add(RegionFlagTypes.INTERACT_PHYSICAL);
     }
 
     public static RegionManager getInstance() {

@@ -1,12 +1,14 @@
 package com.wizardlybump17.seniorteam.regionmanager.api.region;
 
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseStorable;
 import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -78,6 +80,11 @@ public class Region implements DatabaseStorable {
         if (location.getWorld() == null)
             return false;
         return location.getWorld().getName().equals(name) && isInside(location.toVector());
+    }
+
+    @Nullable
+    public RegionFlag getFlag(RegionFlagType<?> type) {
+        return flags.get(type.getName());
     }
 
     public static Region load(ResultSet set, Map<String, RegionFlag> flags) throws SQLException {

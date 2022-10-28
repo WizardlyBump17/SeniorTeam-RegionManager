@@ -54,7 +54,7 @@ public abstract class RegionManager extends JavaPlugin {
 
     private void initRegionsDatabase() {
         saveResource("databases/regions.properties", false);
-        regionsDatabase = DatabaseRegister.getInstance().createDatabase("database/regions.properties", new BukkitDatabaseHolder(this));
+        regionsDatabase = DatabaseRegister.getInstance().createDatabase("databases/regions.properties", new BukkitDatabaseHolder(this));
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             regionsDatabase.open();
             Region.setupDatabase(regionsDatabase);

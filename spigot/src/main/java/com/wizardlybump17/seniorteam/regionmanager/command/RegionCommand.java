@@ -64,7 +64,7 @@ public record RegionCommand(RegionManager plugin) {
         }
 
         Location[] positions = PlayerUtil.getMarkedPositions(sender.getHandle());
-        if (positions[0] == null || positions[1] == null || !positions[0].getWorld().equals(positions[2].getWorld())) {
+        if (positions[0] == null || positions[1] == null || !positions[0].getWorld().equals(positions[1].getWorld())) {
             sender.sendMessage(invalidPositions);
             return;
         }

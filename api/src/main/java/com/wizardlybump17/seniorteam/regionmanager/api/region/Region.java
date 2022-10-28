@@ -161,7 +161,8 @@ public class Region implements DatabaseStorable {
                 "min_z INTEGER NOT NULL, " +
                 "max_x INTEGER NOT NULL, " +
                 "max_y INTEGER NOT NULL, " +
-                "max_z INTEGER NOT NULL" +
+                "max_z INTEGER NOT NULL, " +
+                "players TEXT NOT NULL" +
                 ");"
         );
     }

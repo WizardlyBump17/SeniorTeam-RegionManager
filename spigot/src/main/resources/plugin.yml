@@ -3,6 +3,7 @@ main: com.wizardlybump17.seniorteam.regionmanager.RegionManager
 version: '${version}'
 author: WizardlyBump17
 softdepend: [WLib]
+api-version: 1.19
 commands:
   region:
     permission: regionmanager.admin

@@ -1,4 +1,4 @@
-rootProject.name = 'Region'
+rootProject.name = 'RegionManager'
 include 'api'
 include 'spigot'
 

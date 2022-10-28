@@ -1,13 +1,20 @@
 package com.wizardlybump17.seniorteam.regionmanager.util;
 
+import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionCache;
+import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.command.RegionCommand;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -87,12 +94,7 @@ public class InventoryUtil {
                 }
 
                 entry.setValue(switch (action.toLowerCase()) {
-                    case "rename" -> new ItemButton(
-                            formatRegionItem(button.getItem().get(), region),
-                            (event, inventory) -> {
-
-                            }
-                    );
+                    case "rename" -> getRenameItem(button, region);
                     case "players" -> new ItemButton(
                             formatRegionItem(button.getItem().get(), region),
                             (event, inventory) -> {
@@ -108,6 +110,14 @@ public class InventoryUtil {
                     default -> button;
                 });
             }
+
+            builder
+                    .listener(InventoryListener.<AsyncPlayerChatEvent>builder()
+                            .plugin(RegionManager.getInstance())
+                            .eventClass(AsyncPlayerChatEvent.class)
+                            .consumer(RegionInventory::handleRename)
+                            .build()
+                    );
         }
 
         public static ItemBuilder formatRegionItem(ItemStack original, Region region) {
@@ -115,6 +125,57 @@ public class InventoryUtil {
                     .replaceDisplayNameLore(
                             Map.of("{region}", region.getName())
                     );
+        }
+
+        private static ItemButton getRenameItem(ItemButton button, Region region) {
+            return new ItemButton(
+                    formatRegionItem(button.getItem().get(), region),
+                    (event, inventory) -> {
+                        inventory.setUnregisterListeners(false);
+
+                        HumanEntity entity = event.getWhoClicked();
+                        inventory.setData("player", entity);
+                        inventory.setData("region", region);
+                        inventory.setData("action", "rename");
+
+                        entity.sendMessage(Configuration.Messages.Region.typeName);
+                        entity.closeInventory();
+                    }
+            );
+        }
+
+        private static void handleRename(AsyncPlayerChatEvent event, PaginatedInventory inventory) {
+            Player player = event.getPlayer();
+
+            if (player != inventory.getData("player") || !"rename".equals(inventory.getData("action")))
+                return;
+
+            event.setCancelled(true);
+
+            Region region = inventory.getData("region");
+
+            if (event.getMessage().equalsIgnoreCase("cancel")) {
+                inventory.stopListeners();
+
+                PaginatedInventoryBuilder builder = RegionCommand.regionInventory.clone();
+                formatRegionInventory(builder, region, () -> player.performCommand("region list"));
+                Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> builder.build().show(player));
+                return;
+            }
+
+            if (RegionManager.getInstance().getRegionCache().get(event.getMessage()).isPresent()) {
+                player.sendMessage(RegionCommand.regionAlreadyExists);
+                return;
+            }
+
+            inventory.stopListeners();
+            Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> {
+                player.performCommand("region \"" + region.getName() + "\" \"rename\" \"" + event.getMessage() + "\"");
+
+                PaginatedInventoryBuilder builder = RegionCommand.regionInventory.clone();
+                formatRegionInventory(builder, region, () -> player.performCommand("region list"));
+                builder.build().show(player);
+            });
         }
     }
 }

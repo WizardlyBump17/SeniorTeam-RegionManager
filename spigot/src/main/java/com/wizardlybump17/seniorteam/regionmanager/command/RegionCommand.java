@@ -28,6 +28,10 @@ public record RegionCommand(RegionManager plugin) {
     public static String invalidPositions = "§cInvalid positions";
     @Path(value = "messages.region-created", options = "fancy")
     public static String regionCreated = "§aRegion §f{region} §acreated";
+    @Path(value = "messages.invalid-region", options = "fancy")
+    public static String invalidRegion = "§cInvalid region";
+    @Path(value = "messages.region-deleted", options = "fancy")
+    public static String regionDeleted = "§aRegion §f{region} §adeleted";
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -71,5 +75,19 @@ public record RegionCommand(RegionManager plugin) {
         region.save();
 
         sender.sendMessage(regionCreated.replace("{region}", region.getName()));
+    }
+
+    @Command(execution = "region delete <region>", permission = PERMISSION)
+    public void delete(GenericSender sender, Region region) {
+        if (region == null) {
+            sender.sendMessage(invalidRegion);
+            return;
+        }
+
+        region.setDeleted(true);
+        region.save();
+        plugin.getRegionCache().remove(region.getName());
+
+        sender.sendMessage(regionDeleted.replace("{region}", region.getName()));
     }
 }

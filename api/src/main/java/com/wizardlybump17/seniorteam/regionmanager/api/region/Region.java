@@ -95,6 +95,12 @@ public class Region implements DatabaseStorable {
             flag.save();
     }
 
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+        for (RegionFlag flag : flags.values())
+            flag.setDeleted(deleted);
+    }
+
     public static Region load(ResultSet set, Map<String, RegionFlag> flags) throws SQLException {
         return new Region(
                 set.getString("name"),

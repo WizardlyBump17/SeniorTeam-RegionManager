@@ -1,6 +1,7 @@
 package com.wizardlybump17.seniorteam.regionmanager;
 
 import com.wizardlybump17.seniorteam.regionmanager.command.RegionCommand;
+import com.wizardlybump17.seniorteam.regionmanager.listener.PlayerListener;
 import com.wizardlybump17.seniorteam.regionmanager.listener.RegionListener;
 import com.wizardlybump17.wlib.command.CommandManager;
 import com.wizardlybump17.wlib.command.holder.BukkitCommandHolder;
@@ -16,6 +17,7 @@ public class RegionManager extends com.wizardlybump17.seniorteam.regionmanager.a
         super.onEnable();
 
         Bukkit.getPluginManager().registerEvents(new RegionListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
 
         new CommandManager(new BukkitCommandHolder(this)).registerCommands(
                 new RegionCommand(this)

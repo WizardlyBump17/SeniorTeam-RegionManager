@@ -66,7 +66,7 @@ public record RegionListener(RegionManager plugin) implements Listener {
             }
             case PHYSICAL -> {
                 type = RegionFlagTypes.INTERACT_PHYSICAL;
-                location = player.getLocation();
+                location = event.getClickedBlock().getLocation();
             }
             default -> {
                 type = null;

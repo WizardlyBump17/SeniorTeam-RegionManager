@@ -36,7 +36,7 @@ public class RegionFlagTypes {
                 if (permission == null)
                     return booleanValue.getValue();
                 if (permission.isEmpty())
-                    return player.isOp() && booleanValue.getValue();
+                    return player.isOp() || booleanValue.getValue();
                 return booleanValue.getValue();
             }
         };

@@ -19,7 +19,7 @@ import java.util.Optional;
 @Data
 public class RegionFlag implements DatabaseStorable {
 
-    private final String name;
+    private final int id;
     private final RegionFlagType type;
     private RegionFlagValue<?> value;
     private final String region;
@@ -27,8 +27,8 @@ public class RegionFlag implements DatabaseStorable {
     private boolean deleted;
     private boolean inDatabase;
 
-    public RegionFlag(String name, RegionFlagType type, RegionFlagValue<?> value, String region) {
-        this.name = name;
+    public RegionFlag(int id, RegionFlagType type, RegionFlagValue<?> value, String region) {
+        this.id = id;
         this.type = type;
         this.value = value;
         this.region = region;
@@ -41,7 +41,7 @@ public class RegionFlag implements DatabaseStorable {
 
     @Override
     public void saveToDatabase(Map<String, Object> data) {
-        data.put("name", name);
+        data.put("id", id);
         data.put("type", type.getName());
         data.put("value", BukkitStreamsUtil.serialize(value));
         data.put("region_name", region);
@@ -49,13 +49,13 @@ public class RegionFlag implements DatabaseStorable {
 
     @Override
     public void updateToDatabase(Map<String, Object> where, Map<String, Object> data) {
-        where.put("name", name);
+        where.put("id", id);
         data.put("value", BukkitStreamsUtil.serialize(value));
     }
 
     @Override
     public void deleteFromDatabase(Map<String, Object> data) {
-        data.put("name", name);
+        data.put("id", id);
     }
 
     public boolean test(Player player) {
@@ -72,7 +72,7 @@ public class RegionFlag implements DatabaseStorable {
             return null;
 
         return new RegionFlag(
-                set.getString("name"),
+                set.getInt("id"),
                 typeOptional.get(),
                 (RegionFlagValue<?>) BukkitStreamsUtil.deserialize(set.getBytes("value")),
                 set.getString("region_name")
@@ -81,7 +81,7 @@ public class RegionFlag implements DatabaseStorable {
 
     public static void setupDatabase(Database<?> database) {
         database.update("CREATE TABLE IF NOT EXISTS flag (" +
-                "name VARCHAR(255) PRIMARY KEY NOT NULL, " +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
                 "type VARCHAR(255) NOT NULL, " +
                 "value BLOB NOT NULL, " +
                 "region_name VARCHAR(255) NOT NULL, " +

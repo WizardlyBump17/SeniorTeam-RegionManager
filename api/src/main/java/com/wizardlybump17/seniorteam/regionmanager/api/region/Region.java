@@ -28,7 +28,7 @@ public class Region implements DatabaseStorable {
     private final String world;
     private final Vector minPos;
     private final Vector maxPos;
-    private final Map<String, RegionFlag> flags;
+    private final Map<RegionFlagType, RegionFlag> flags;
     private final Set<UUID> players;
     private boolean deleted;
     private boolean inDatabase;
@@ -99,7 +99,17 @@ public class Region implements DatabaseStorable {
                 return flag;
         return null;
     }
-    
+
+    public void addFlag(RegionFlag flag) {
+        flags.put(flag.getType(), flag);
+        dirty = true;
+    }
+
+    public void removeFlag(RegionFlagType type) {
+        flags.remove(type);
+        dirty = true;
+    }
+
     public void save() {
         Bukkit.getScheduler().runTaskAsynchronously(RegionManager.getInstance(), () -> RegionManager.getInstance().getRegionsDatabase().save(this, "region"));
         for (RegionFlag flag : flags.values())
@@ -132,7 +142,7 @@ public class Region implements DatabaseStorable {
         dirty = true;
     }
 
-    public static Region load(ResultSet set, Map<String, RegionFlag> flags) throws SQLException {
+    public static Region load(ResultSet set, Map<RegionFlagType, RegionFlag> flags) throws SQLException {
         Set<UUID> players = new HashSet<>();
         for (String s : set.getString("players").split(","))
             if (!s.isEmpty())

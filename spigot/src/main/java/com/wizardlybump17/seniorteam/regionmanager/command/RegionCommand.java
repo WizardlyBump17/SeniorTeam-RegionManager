@@ -3,6 +3,9 @@ package com.wizardlybump17.seniorteam.regionmanager.command;
 import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionCache;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.sender.GenericSender;
@@ -15,6 +18,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @ConfigInfo(name = "configs/commands/region.yml", holderType = RegionManager.class)
@@ -40,6 +44,12 @@ public record RegionCommand(RegionManager plugin) {
     public static String playerAdded = "§aAdded §f{player} §ato region §f{region}";
     @Path(value = "messages.player-removed", options = "fancy")
     public static String playerRemoved = "§aPlayer §f{player} §afrom region §f{region}";
+    @Path(value = "messages.invalid-flag-type", options = "fancy")
+    public static String invalidFlagType = "§cInvalid flag type";
+    @Path(value = "messages.invalid-flag-value", options = "fancy")
+    public static String invalidFlagValue = "§cInvalid flag value";
+    @Path(value = "messages.flag-set", options = "fancy")
+    public static String flagSet = "§aFlag §f{type} §aset to §f{value} §ain region §f{region}";
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -141,6 +151,38 @@ public record RegionCommand(RegionManager plugin) {
                 playerRemoved
                         .replace("{region}", region.getName())
                         .replace("{player}", player.getName())
+        );
+    }
+
+    @Command(execution = "region <region> flag set <type> <value>", permission = PERMISSION)
+    public void flagSet(GenericSender sender, Region region, RegionFlagType type, RegionFlagValue<?> value) {
+        if (region == null) {
+            sender.sendMessage(invalidRegion);
+            return;
+        }
+
+        if (type == null) {
+            sender.sendMessage(invalidFlagType);
+            return;
+        }
+
+        if (value == null) {
+            sender.sendMessage(invalidFlagValue);
+            return;
+        }
+
+        region.addFlag(new RegionFlag(
+                ThreadLocalRandom.current().nextInt(),
+                type,
+                value,
+                region.getName()
+        ));
+        region.save();
+        sender.sendMessage(
+                flagSet
+                        .replace("{region}", region.getName())
+                        .replace("{type}", type.getName())
+                        .replace("{value}", value.toString())
         );
     }
 }

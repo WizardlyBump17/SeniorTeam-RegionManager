@@ -4,6 +4,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionCache;
 import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionFlagTypeCache;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagTypes;
 import com.wizardlybump17.wlib.database.BukkitDatabaseHolder;
 import com.wizardlybump17.wlib.database.Database;
@@ -62,12 +63,12 @@ public abstract class RegionManager extends JavaPlugin {
 
             try (ResultSet query = regionsDatabase.query("SELECT * FROM region;")) {
                 while (query.next()) {
-                    Map<String, RegionFlag> flags = new HashMap<>();
+                    Map<RegionFlagType, RegionFlag> flags = new HashMap<>();
                     try (ResultSet flagQuery = regionsDatabase.query("SELECT * FROM flag;")) {
                         while (flagQuery.next()) {
                             RegionFlag flag = RegionFlag.load(flagQuery, regionFlagTypeCache);
                             flag.setInDatabase(true);
-                            flags.put(flag.getName(), flag);
+                            flags.put(flag.getType(), flag);
                         }
                     }
 

@@ -182,7 +182,7 @@ public record RegionCommand(RegionManager plugin) {
                 flagSet
                         .replace("{region}", region.getName())
                         .replace("{type}", type.getName())
-                        .replace("{value}", value.toString())
+                        .replace("{value}", value.getValue().toString())
         );
     }
 }

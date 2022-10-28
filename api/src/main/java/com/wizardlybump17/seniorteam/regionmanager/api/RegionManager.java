@@ -6,6 +6,8 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagTypes;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.reader.BooleanFlagValueReader;
+import com.wizardlybump17.seniorteam.regionmanager.api.registry.RegionFlagValueReaderRegistry;
 import com.wizardlybump17.wlib.database.BukkitDatabaseHolder;
 import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
@@ -24,10 +26,12 @@ public abstract class RegionManager extends JavaPlugin {
     private final RegionFlagTypeCache regionFlagTypeCache = new RegionFlagTypeCache();
     private final RegionCache regionCache = new RegionCache();
     private Database<?> regionsDatabase;
+    private final RegionFlagValueReaderRegistry regionFlagValueReaderRegistry = new RegionFlagValueReaderRegistry();
 
     @Override
     public void onLoad() {
         initFlagTypes();
+        initFlagValueReaders();
         initConfigs();
     }
 
@@ -39,6 +43,10 @@ public abstract class RegionManager extends JavaPlugin {
         regionFlagTypeCache.add(RegionFlagTypes.RIGHT_CLICK_AIR);
         regionFlagTypeCache.add(RegionFlagTypes.RIGHT_CLICK_BLOCK);
         regionFlagTypeCache.add(RegionFlagTypes.INTERACT_PHYSICAL);
+    }
+
+    private void initFlagValueReaders() {
+        regionFlagValueReaderRegistry.add(new BooleanFlagValueReader());
     }
 
     protected void initConfigs() {

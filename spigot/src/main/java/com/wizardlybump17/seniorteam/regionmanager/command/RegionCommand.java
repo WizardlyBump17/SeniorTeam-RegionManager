@@ -7,14 +7,20 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
+import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.sender.GenericSender;
 import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
+import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
+import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
+import com.wizardlybump17.wlib.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -48,6 +54,40 @@ public record RegionCommand(RegionManager plugin) {
     public static String flagNotSet = "§cFlag §f{type} §cis not set in region §f{region}";
     @Path(value = "messages.region.info", options = "fancy")
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
+    @Path("inventory.regions")
+    public static PaginatedInventoryBuilder regionsInventory = PaginatedInventoryBuilder.create()
+            .title("Regions")
+            .shape("         " +
+                    " xxxxxxx " +
+                    "<   @   >"
+            )
+            .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
+            .shapeReplacement('x', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BRICKS)
+                            .displayName("§f{region}")
+                            .lore("§7Click to see more info")
+            ))
+            .nextPage(new InventoryNavigator(
+                    new ItemBuilder()
+                            .type(Material.ARROW)
+                            .displayName("§aNext page")
+                            .build(),
+                    ' '
+            ))
+            .previousPage(new InventoryNavigator(
+                    new ItemBuilder()
+                            .type(Material.ARROW)
+                            .displayName("§aPrevious page")
+                            .build(),
+                    ' '
+            ))
+            .shapeReplacement('@', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BARRIER)
+                            .displayName("§cClose")
+                            .customData("action", "close")
+            ));
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -60,6 +100,13 @@ public record RegionCommand(RegionManager plugin) {
                                         .collect(Collectors.joining(", "))
                         )
         );
+    }
+
+    @Command(execution = "region list", permission = PERMISSION, priority = 3)
+    public void list(PlayerSender sender) {
+        PaginatedInventoryBuilder builder = regionsInventory.clone();
+        InventoryUtil.formatRegionsInventory(builder, plugin.getRegionCache());
+        builder.build().show(sender.getHandle());
     }
 
     @Command(execution = "region create <name>", permission = PERMISSION)

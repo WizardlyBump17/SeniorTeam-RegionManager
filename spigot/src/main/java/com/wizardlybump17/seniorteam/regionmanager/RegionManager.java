@@ -1,5 +1,6 @@
 package com.wizardlybump17.seniorteam.regionmanager;
 
+import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.command.RegionCommand;
 import com.wizardlybump17.seniorteam.regionmanager.command.reader.RegionArgsReader;
 import com.wizardlybump17.seniorteam.regionmanager.command.reader.RegionFlagTypeArgsReader;
@@ -34,6 +35,7 @@ public class RegionManager extends com.wizardlybump17.seniorteam.regionmanager.a
 
         super.initConfigs();
 
+        ConfigHandlerRegistry.getInstance().register(Configuration.Messages.class);
         ConfigHandlerRegistry.getInstance().register(RegionCommand.class);
     }
 

@@ -2,6 +2,7 @@ package com.wizardlybump17.seniorteam.regionmanager.command;
 
 import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionCache;
+import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
@@ -30,24 +31,14 @@ public record RegionCommand(RegionManager plugin) {
     public static String regionList = "§aRegions: §f{regions}";
     @Path(value = "messages.region-already-exists", options = "fancy")
     public static String regionAlreadyExists = "§cA region with this name already exists";
-    @Path(value = "messages.invalid-positions", options = "fancy")
-    public static String invalidPositions = "§cInvalid positions";
     @Path(value = "messages.region-created", options = "fancy")
     public static String regionCreated = "§aRegion §f{region} §acreated";
-    @Path(value = "messages.invalid-region", options = "fancy")
-    public static String invalidRegion = "§cInvalid region";
     @Path(value = "messages.region-deleted", options = "fancy")
     public static String regionDeleted = "§aRegion §f{region} §adeleted";
-    @Path(value = "messages.invalid-player", options = "fancy")
-    public static String invalidPlayer = "§cInalid player";
     @Path(value = "messages.player-added", options = "fancy")
     public static String playerAdded = "§aAdded §f{player} §ato region §f{region}";
     @Path(value = "messages.player-removed", options = "fancy")
     public static String playerRemoved = "§aPlayer §f{player} §afrom region §f{region}";
-    @Path(value = "messages.invalid-flag-type", options = "fancy")
-    public static String invalidFlagType = "§cInvalid flag type";
-    @Path(value = "messages.invalid-flag-value", options = "fancy")
-    public static String invalidFlagValue = "§cInvalid flag value";
     @Path(value = "messages.flag-set", options = "fancy")
     public static String flagSet = "§aFlag §f{type} §aset to §f{value} §ain region §f{region}";
 
@@ -75,7 +66,7 @@ public record RegionCommand(RegionManager plugin) {
 
         Location[] positions = PlayerUtil.getMarkedPositions(sender.getHandle());
         if (positions[0] == null || positions[1] == null || !positions[0].getWorld().equals(positions[1].getWorld())) {
-            sender.sendMessage(invalidPositions);
+            sender.sendMessage(Configuration.Messages.invalidPositions);
             return;
         }
 
@@ -99,7 +90,7 @@ public record RegionCommand(RegionManager plugin) {
     @Command(execution = "region delete <region>", permission = PERMISSION)
     public void delete(GenericSender sender, Region region) {
         if (region == null) {
-            sender.sendMessage(invalidRegion);
+            sender.sendMessage(Configuration.Messages.invalidRegion);
             return;
         }
 
@@ -113,12 +104,12 @@ public record RegionCommand(RegionManager plugin) {
     @Command(execution = "region <region> player add <player>", permission = PERMISSION)
     public void playerAdd(GenericSender sender, Region region, Player player) {
         if (region == null) {
-            sender.sendMessage(invalidRegion);
+            sender.sendMessage(Configuration.Messages.invalidRegion);
             return;
         }
 
         if (player == null) {
-            sender.sendMessage(invalidPlayer);
+            sender.sendMessage(Configuration.Messages.invalidPlayer);
             return;
         }
 
@@ -135,12 +126,12 @@ public record RegionCommand(RegionManager plugin) {
     @Command(execution = "region <region> player remove <player>", permission = PERMISSION)
     public void playerRemove(GenericSender sender, Region region, Player player) {
         if (region == null) {
-            sender.sendMessage(invalidRegion);
+            sender.sendMessage(Configuration.Messages.invalidRegion);
             return;
         }
 
         if (player == null) {
-            sender.sendMessage(invalidPlayer);
+            sender.sendMessage(Configuration.Messages.invalidPlayer);
             return;
         }
 
@@ -157,17 +148,17 @@ public record RegionCommand(RegionManager plugin) {
     @Command(execution = "region <region> flag set <type> <value>", permission = PERMISSION)
     public void flagSet(GenericSender sender, Region region, RegionFlagType type, RegionFlagValue<?> value) {
         if (region == null) {
-            sender.sendMessage(invalidRegion);
+            sender.sendMessage(Configuration.Messages.invalidRegion);
             return;
         }
 
         if (type == null) {
-            sender.sendMessage(invalidFlagType);
+            sender.sendMessage(Configuration.Messages.invalidFlagType);
             return;
         }
 
         if (value == null) {
-            sender.sendMessage(invalidFlagValue);
+            sender.sendMessage(Configuration.Messages.invalidFlagValue);
             return;
         }
 

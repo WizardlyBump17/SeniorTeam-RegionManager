@@ -67,7 +67,7 @@ public abstract class RegionManager extends JavaPlugin {
                         while (flagQuery.next()) {
                             RegionFlag flag = RegionFlag.load(flagQuery, regionFlagTypeCache);
                             flag.setInDatabase(true);
-                            flags.put(flag.getType().getName(), flag);
+                            flags.put(flag.getName(), flag);
                         }
                     }
 

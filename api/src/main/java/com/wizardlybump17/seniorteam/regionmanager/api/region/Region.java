@@ -94,7 +94,10 @@ public class Region implements DatabaseStorable {
 
     @Nullable
     public RegionFlag getFlag(RegionFlagType type) {
-        return flags.get(type.getName());
+        for (RegionFlag flag : flags.values())
+            if (flag.getType().equals(type))
+                return flag;
+        return null;
     }
     
     public void save() {

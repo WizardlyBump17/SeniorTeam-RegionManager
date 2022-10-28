@@ -1,5 +1,6 @@
 package com.wizardlybump17.seniorteam.regionmanager.api.region.flag;
 
+import com.wizardlybump17.seniorteam.regionmanager.api.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.cache.RegionFlagTypeCache;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
@@ -7,6 +8,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.util.BukkitStreamsUtil;
 import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseStorable;
 import lombok.Data;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.ResultSet;
@@ -42,7 +44,7 @@ public class RegionFlag implements DatabaseStorable {
         data.put("name", name);
         data.put("type", type.getName());
         data.put("value", BukkitStreamsUtil.serialize(value));
-        data.put("region", region);
+        data.put("region_name", region);
     }
 
     @Override
@@ -60,6 +62,10 @@ public class RegionFlag implements DatabaseStorable {
         return type.test(value, player);
     }
 
+    public void save() {
+        Bukkit.getScheduler().runTaskAsynchronously(RegionManager.getInstance(), () -> RegionManager.getInstance().getRegionsDatabase().save(this, "flag"));
+    }
+
     public static RegionFlag load(ResultSet set, RegionFlagTypeCache typeCache) throws SQLException {
         Optional<RegionFlagType> typeOptional = typeCache.get(set.getString("type"));
         if (typeOptional.isEmpty())
@@ -69,7 +75,7 @@ public class RegionFlag implements DatabaseStorable {
                 set.getString("name"),
                 typeOptional.get(),
                 (RegionFlagValue<?>) BukkitStreamsUtil.deserialize(set.getBytes("value")),
-                set.getString("region")
+                set.getString("region_name")
         );
     }
 
@@ -78,7 +84,8 @@ public class RegionFlag implements DatabaseStorable {
                 "name VARCHAR(255) PRIMARY KEY NOT NULL, " +
                 "type VARCHAR(255) NOT NULL, " +
                 "value BLOB NOT NULL, " +
-                "region VARCHAR(255) NOT NULL" + //foreign key
+                "region_name VARCHAR(255) NOT NULL, " +
+                "FOREIGN KEY (region_name) REFERENCES region(name)" +
                 ");"
         );
     }

@@ -54,7 +54,7 @@ public record RegionCommand(RegionManager plugin) {
     public static String flagNotSet = "§cFlag §f{type} §cis not set in region §f{region}";
     @Path(value = "messages.region.info", options = "fancy")
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
-    @Path("inventory.regions")
+    @Path("inventory.region-list")
     public static PaginatedInventoryBuilder regionsInventory = PaginatedInventoryBuilder.create()
             .title("Regions")
             .shape("         " +
@@ -88,6 +88,57 @@ public record RegionCommand(RegionManager plugin) {
                             .displayName("§cClose")
                             .customData("action", "close")
             ));
+    @Path("inventory.region")
+    public static PaginatedInventoryBuilder regionInventory = PaginatedInventoryBuilder.create()
+            .title("Region: {region}")
+            .shape("    R    " +
+                    " N  P  L " +
+                    "    @    "
+            )
+            .shapeReplacement('R', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BRICKS)
+                            .displayName("§f{region}")
+            ))
+            .shapeReplacement('N', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.NAME_TAG)
+                            .displayName("§aRename")
+                            .customData("action", "rename")
+            ))
+            .shapeReplacement('P', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.PLAYER_HEAD)
+                            .displayName("§aPlayers")
+                            .customData("action", "players")
+            ))
+            .shapeReplacement('L', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.COMPASS)
+                            .displayName("§aLocation")
+                            .customData("action", "location")
+            ))
+            .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
+            .nextPage(new InventoryNavigator(
+                    new ItemBuilder()
+                            .type(Material.ARROW)
+                            .displayName("§aNext page")
+                            .build(),
+                    ' '
+            ))
+            .previousPage(new InventoryNavigator(
+                    new ItemBuilder()
+                            .type(Material.ARROW)
+                            .displayName("§aPrevious page")
+                            .build(),
+                    ' '
+            ))
+            .shapeReplacement('@', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BARRIER)
+                            .displayName("§cBack")
+                            .customData("action", "back")
+            ));
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -105,7 +156,7 @@ public record RegionCommand(RegionManager plugin) {
     @Command(execution = "region list", permission = PERMISSION, priority = 3)
     public void list(PlayerSender sender) {
         PaginatedInventoryBuilder builder = regionsInventory.clone();
-        InventoryUtil.formatRegionsInventory(builder, plugin.getRegionCache());
+        InventoryUtil.RegionInventory.formatRegionsInventory(builder, plugin.getRegionCache());
         builder.build().show(sender.getHandle());
     }
 

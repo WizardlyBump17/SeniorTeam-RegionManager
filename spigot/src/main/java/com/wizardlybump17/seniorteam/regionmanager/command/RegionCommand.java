@@ -27,23 +27,23 @@ public record RegionCommand(RegionManager plugin) {
 
     public static final String PERMISSION = "regionmanager.admin";
 
-    @Path(value = "messages.region-list", options = "fancy")
+    @Path(value = "messages.region.list", options = "fancy")
     public static String regionList = "§aRegions: §f{regions}";
-    @Path(value = "messages.region-already-exists", options = "fancy")
+    @Path(value = "messages.region.already-exists", options = "fancy")
     public static String regionAlreadyExists = "§cA region with this name already exists";
-    @Path(value = "messages.region-created", options = "fancy")
+    @Path(value = "messages.created", options = "fancy")
     public static String regionCreated = "§aRegion §f{region} §acreated";
-    @Path(value = "messages.region-deleted", options = "fancy")
+    @Path(value = "messages.deleted", options = "fancy")
     public static String regionDeleted = "§aRegion §f{region} §adeleted";
-    @Path(value = "messages.player-added", options = "fancy")
+    @Path(value = "messages.player.added", options = "fancy")
     public static String playerAdded = "§aAdded §f{player} §ato region §f{region}";
-    @Path(value = "messages.player-removed", options = "fancy")
+    @Path(value = "messages.player.removed", options = "fancy")
     public static String playerRemoved = "§aPlayer §f{player} §afrom region §f{region}";
-    @Path(value = "messages.flag-set", options = "fancy")
+    @Path(value = "messages.flag.set", options = "fancy")
     public static String flagSet = "§aFlag §f{type} §aset to §f{value} §ain region §f{region}";
-    @Path(value = "messages.flag-unset", options = "fancy")
+    @Path(value = "messages.flag.unset", options = "fancy")
     public static String flagUnset = "§aFlag §f{type} §aunset from region §f{region}";
-    @Path(value = "messages.flag-not-set", options = "fancy")
+    @Path(value = "messages.flag.not-set", options = "fancy")
     public static String flagNotSet = "§cFlag §f{type} §cis not set in region §f{region}";
 
     @Command(execution = "region list", permission = PERMISSION)

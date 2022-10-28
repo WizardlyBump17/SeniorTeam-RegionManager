@@ -22,5 +22,15 @@ public class Configuration {
         public static String invalidFlagValue = "§cInvalid flag value";
         @Path(value = "invalid-positions", options = "fancy")
         public static String invalidPositions = "§cInvalid positions";
+
+        @UtilityClass
+        @ConfigInfo(name = "messages/region.yml", holderType = RegionManager.class)
+        public static class Region {
+
+            @Path(value = "pos-1", options = "fancy")
+            public static String pos1 = "§aPosition 1 set to §f{position}";
+            @Path(value = "pos-2", options = "fancy")
+            public static String pos2 = "§aPosition 2 set to §f{position}";
+        }
     }
 }

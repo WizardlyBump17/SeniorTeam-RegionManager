@@ -1,7 +1,10 @@
 package com.wizardlybump17.seniorteam.regionmanager.listener;
 
 import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
+import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
+import com.wizardlybump17.wlib.util.bukkit.StringUtil;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,15 +24,19 @@ public record PlayerListener(RegionManager plugin) implements Listener {
             return;
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            PlayerUtil.markPosition(player, event.getClickedBlock().getLocation(), "Pos1");
+            Location location = event.getClickedBlock().getLocation();
+            PlayerUtil.markPosition(player, location, "Pos1");
             event.setCancelled(true);
+            player.sendMessage(Configuration.Messages.Region.pos1.replace("{position}", StringUtil.toString(location)));
             return;
         }
 
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
+        Location location = event.getClickedBlock().getLocation();
         PlayerUtil.markPosition(player, event.getClickedBlock().getLocation(), "Pos2");
         event.setCancelled(true);
+        player.sendMessage(Configuration.Messages.Region.pos2.replace("{position}", StringUtil.toString(location)));
     }
 }

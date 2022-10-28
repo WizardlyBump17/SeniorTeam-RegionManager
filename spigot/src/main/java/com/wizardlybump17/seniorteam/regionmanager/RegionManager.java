@@ -36,6 +36,7 @@ public class RegionManager extends com.wizardlybump17.seniorteam.regionmanager.a
         super.initConfigs();
 
         ConfigHandlerRegistry.getInstance().register(Configuration.Messages.class);
+        ConfigHandlerRegistry.getInstance().register(Configuration.Messages.Region.class);
         ConfigHandlerRegistry.getInstance().register(RegionCommand.class);
     }
 

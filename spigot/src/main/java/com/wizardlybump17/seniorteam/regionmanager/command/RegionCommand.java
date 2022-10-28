@@ -41,6 +41,10 @@ public record RegionCommand(RegionManager plugin) {
     public static String playerRemoved = "§aPlayer §f{player} §afrom region §f{region}";
     @Path(value = "messages.flag-set", options = "fancy")
     public static String flagSet = "§aFlag §f{type} §aset to §f{value} §ain region §f{region}";
+    @Path(value = "messages.flag-unset", options = "fancy")
+    public static String flagUnset = "§aFlag §f{type} §aunset from region §f{region}";
+    @Path(value = "messages.flag-not-set", options = "fancy")
+    public static String flagNotSet = "§cFlag §f{type} §cis not set in region §f{region}";
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -174,6 +178,38 @@ public record RegionCommand(RegionManager plugin) {
                         .replace("{region}", region.getName())
                         .replace("{type}", type.getName())
                         .replace("{value}", value.getValue().toString())
+        );
+    }
+
+    @Command(execution = "region <region> flag unset <type>", permission = PERMISSION)
+    public void flagUnset(GenericSender sender, Region region, RegionFlagType type) {
+        if (region == null) {
+            sender.sendMessage(Configuration.Messages.invalidRegion);
+            return;
+        }
+
+        if (type == null) {
+            sender.sendMessage(Configuration.Messages.invalidFlagType);
+            return;
+        }
+
+        RegionFlag flag = region.removeFlag(type);
+        if (flag == null) {
+            sender.sendMessage(
+                    flagNotSet
+                            .replace("{region}", region.getName())
+                            .replace("{type}", type.getName())
+            );
+            return;
+        }
+
+        flag.save();
+        region.save();
+        sender.sendMessage(
+                flagUnset
+                        .replace("{region}", region.getName())
+                        .replace("{type}", type.getName())
+                        .replace("{value}", flag.getValue().getValue().toString())
         );
     }
 }

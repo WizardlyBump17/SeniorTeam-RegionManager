@@ -22,7 +22,7 @@ public class RegionFlag implements DatabaseStorable {
     private final int id;
     private final RegionFlagType type;
     private RegionFlagValue<?> value;
-    private final String region;
+    private String region;
     private boolean dirty;
     private boolean deleted;
     private boolean inDatabase;
@@ -32,6 +32,11 @@ public class RegionFlag implements DatabaseStorable {
         this.type = type;
         this.value = value;
         this.region = region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+        dirty = true;
     }
 
     public void setValue(RegionFlagValue<?> value) {
@@ -51,6 +56,7 @@ public class RegionFlag implements DatabaseStorable {
     public void updateToDatabase(Map<String, Object> where, Map<String, Object> data) {
         where.put("id", id);
         data.put("value", BukkitStreamsUtil.serialize(value));
+        data.put("region_name", region);
     }
 
     @Override

@@ -24,7 +24,8 @@ import java.util.stream.Collectors;
 @Data
 public class Region implements DatabaseStorable {
 
-    private final String name;
+    private String name;
+    private String oldName;
     private final String world;
     private final Vector minPos;
     private final Vector maxPos;
@@ -33,6 +34,24 @@ public class Region implements DatabaseStorable {
     private boolean deleted;
     private boolean inDatabase;
     private boolean dirty;
+
+    public Region(String name, String world, Vector minPos, Vector maxPos, Map<RegionFlagType, RegionFlag> flags, Set<UUID> players) {
+        this.name = name;
+        this.world = world;
+        this.minPos = minPos;
+        this.maxPos = maxPos;
+        this.flags = flags;
+        this.players = players;
+    }
+
+    public void setName(String name) {
+        oldName = this.name;
+        this.name = name;
+        dirty = true;
+
+        for (RegionFlag flag : flags.values())
+            flag.setRegion(name);
+    }
 
     public void setBounds(Vector v1, Vector v2) {
         Vector min = Vector.getMinimum(v1, v2);
@@ -59,9 +78,11 @@ public class Region implements DatabaseStorable {
 
     @Override
     public void updateToDatabase(Map<String, Object> where, Map<String, Object> data) {
-        where.put("name", name);
+        where.put("name", oldName == null ? name : oldName);
+        data.put("name", name);
         savePosition(data);
         data.put("players", players.stream().map(UUID::toString).collect(Collectors.joining(",")));
+        oldName = name;
     }
 
     private void savePosition(Map<String, Object> data) {

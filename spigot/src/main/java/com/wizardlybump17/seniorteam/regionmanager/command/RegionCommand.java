@@ -54,6 +54,8 @@ public record RegionCommand(RegionManager plugin) {
     public static String flagNotSet = "§cFlag §f{type} §cis not set in region §f{region}";
     @Path(value = "messages.region.info", options = "fancy")
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
+    @Path(value = "messages.region.renamed", options = "fancy")
+    public static String regionRenamed = "§aRegion renamed to §f{region}";
     @Path("inventory.region-list")
     public static PaginatedInventoryBuilder regionsInventory = PaginatedInventoryBuilder.create()
             .title("Regions")
@@ -333,5 +335,25 @@ public record RegionCommand(RegionManager plugin) {
                                 .collect(Collectors.joining(", "))
                         )
         );
+    }
+
+    @Command(execution = "region <region> rename <name>", permission = PERMISSION)
+    public void rename(GenericSender sender, Region region, String newName) {
+        if (region == null) {
+            sender.sendMessage(Configuration.Messages.invalidRegion);
+            return;
+        }
+
+        if (plugin.getRegionCache().has(newName)) {
+            sender.sendMessage(regionAlreadyExists);
+            return;
+        }
+
+        plugin.getRegionCache().remove(region.getName());
+        region.setName(newName);
+        plugin.getRegionCache().add(region);
+        region.save();
+
+        sender.sendMessage(regionRenamed.replace("{region}", region.getName()));
     }
 }

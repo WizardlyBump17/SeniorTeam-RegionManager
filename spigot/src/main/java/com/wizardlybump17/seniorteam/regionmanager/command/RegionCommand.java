@@ -10,6 +10,7 @@ import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -33,6 +34,12 @@ public record RegionCommand(RegionManager plugin) {
     public static String invalidRegion = "§cInvalid region";
     @Path(value = "messages.region-deleted", options = "fancy")
     public static String regionDeleted = "§aRegion §f{region} §adeleted";
+    @Path(value = "messages.invalid-player", options = "fancy")
+    public static String invalidPlayer = "§cInalid player";
+    @Path(value = "messages.player-added", options = "fancy")
+    public static String playerAdded = "§aAdded §f{player} §ato region §f{region}";
+    @Path(value = "messages.player-removed", options = "fancy")
+    public static String playerRemoved = "§aPlayer §f{player} §afrom region §f{region}";
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -91,5 +98,49 @@ public record RegionCommand(RegionManager plugin) {
         plugin.getRegionCache().remove(region.getName());
 
         sender.sendMessage(regionDeleted.replace("{region}", region.getName()));
+    }
+
+    @Command(execution = "region <region> player add <player>", permission = PERMISSION)
+    public void playerAdd(GenericSender sender, Region region, Player player) {
+        if (region == null) {
+            sender.sendMessage(invalidRegion);
+            return;
+        }
+
+        if (player == null) {
+            sender.sendMessage(invalidPlayer);
+            return;
+        }
+
+        region.addPlayer(player.getUniqueId());
+        region.save();
+
+        sender.sendMessage(
+                playerAdded
+                        .replace("{region}", region.getName())
+                        .replace("{player}", player.getName())
+        );
+    }
+
+    @Command(execution = "region <region> player remove <player>", permission = PERMISSION)
+    public void playerRemove(GenericSender sender, Region region, Player player) {
+        if (region == null) {
+            sender.sendMessage(invalidRegion);
+            return;
+        }
+
+        if (player == null) {
+            sender.sendMessage(invalidPlayer);
+            return;
+        }
+
+        region.removePlayer(player.getUniqueId());
+        region.save();
+
+        sender.sendMessage(
+                playerRemoved
+                        .replace("{region}", region.getName())
+                        .replace("{player}", player.getName())
+        );
     }
 }

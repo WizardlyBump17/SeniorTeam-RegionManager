@@ -110,7 +110,7 @@ public class Region implements DatabaseStorable {
     }
 
     public boolean test(RegionFlag flag, Player player) {
-        if (players.contains(player))
+        if (players.contains(player.getUniqueId()))
             return true;
         return flag != null && flag.test(player);
     }

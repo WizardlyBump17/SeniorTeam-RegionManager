@@ -59,7 +59,7 @@ public class RegionFlag implements DatabaseStorable {
     }
 
     public boolean test(Player player) {
-        return type.isValidValue(value) && type.test(value, player);
+        return type.test(value, player);
     }
 
     public void save() {

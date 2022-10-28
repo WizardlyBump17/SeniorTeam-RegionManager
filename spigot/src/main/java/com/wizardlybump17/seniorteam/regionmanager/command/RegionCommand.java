@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @ConfigInfo(name = "configs/commands/region.yml", holderType = RegionManager.class)
@@ -69,7 +70,8 @@ public record RegionCommand(RegionManager plugin) {
                 positions[0].getWorld().getName(),
                 Vector.getMinimum(pos1, pos2),
                 Vector.getMaximum(pos1, pos2),
-                new HashMap<>()
+                new HashMap<>(),
+                new HashSet<>()
         );
         cache.add(region);
         region.save();

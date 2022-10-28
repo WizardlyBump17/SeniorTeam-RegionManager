@@ -66,7 +66,7 @@ public abstract class RegionManager extends JavaPlugin {
                     try (ResultSet flagQuery = regionsDatabase.query("SELECT * FROM flag;")) {
                         RegionFlag flag = RegionFlag.load(flagQuery, regionFlagTypeCache);
                         flag.setInDatabase(true);
-                        flags.put(flag.getName(), flag);
+                        flags.put(flag.getType().getName(), flag);
                     }
 
                     Region region = Region.load(query, flags);

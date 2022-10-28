@@ -9,12 +9,17 @@ import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 public class Region implements DatabaseStorable {
@@ -24,6 +29,7 @@ public class Region implements DatabaseStorable {
     private final Vector minPos;
     private final Vector maxPos;
     private final Map<String, RegionFlag> flags;
+    private final Set<UUID> players;
     private boolean deleted;
     private boolean inDatabase;
     private boolean dirty;
@@ -48,12 +54,14 @@ public class Region implements DatabaseStorable {
         data.put("name", name);
         data.put("world", world);
         savePosition(data);
+        data.put("players", players.stream().map(UUID::toString).collect(Collectors.joining(",")));
     }
 
     @Override
     public void updateToDatabase(Map<String, Object> where, Map<String, Object> data) {
         where.put("name", name);
         savePosition(data);
+        data.put("players", players.stream().map(UUID::toString).collect(Collectors.joining(",")));
     }
 
     private void savePosition(Map<String, Object> data) {
@@ -101,7 +109,31 @@ public class Region implements DatabaseStorable {
             flag.setDeleted(deleted);
     }
 
+    public boolean test(RegionFlag flag, Player player) {
+        if (players.contains(player))
+            return true;
+        return flag != null && flag.test(player);
+    }
+
+    public boolean hasPlayer(UUID player) {
+        return players.contains(player);
+    }
+
+    public void addPlayer(UUID player) {
+        players.add(player);
+        dirty = true;
+    }
+
+    public void removePlayer(UUID player) {
+        players.remove(player);
+        dirty = true;
+    }
+
     public static Region load(ResultSet set, Map<String, RegionFlag> flags) throws SQLException {
+        Set<UUID> players = new HashSet<>();
+        for (String s : set.getString("players").split(","))
+            if (!s.isEmpty())
+                players.add(UUID.fromString(s));
         return new Region(
                 set.getString("name"),
                 set.getString("world"),
@@ -115,7 +147,8 @@ public class Region implements DatabaseStorable {
                         set.getInt("max_y"),
                         set.getInt("max_z")
                 ),
-                flags
+                flags,
+                players
         );
     }
 

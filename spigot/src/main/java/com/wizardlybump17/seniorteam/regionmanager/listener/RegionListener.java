@@ -19,7 +19,7 @@ public record RegionListener(RegionManager plugin) implements Listener {
     private boolean testRegion(RegionFlagType type, Location location, Player player) {
         for (Region region : plugin.getRegionCache().get(location)) {
             RegionFlag flag = region.getFlag(type);
-            if (flag == null || flag.test(player))
+            if (region.test(flag, player))
                 continue;
 
             return false;
@@ -71,6 +71,6 @@ public record RegionListener(RegionManager plugin) implements Listener {
         }
 
         if (type != null)
-            testRegion(type, location, player);
+            event.setCancelled(!testRegion(type, location, player));
     }
 }

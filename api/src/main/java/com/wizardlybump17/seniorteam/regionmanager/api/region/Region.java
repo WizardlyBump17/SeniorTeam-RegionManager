@@ -126,8 +126,11 @@ public class Region implements DatabaseStorable {
         dirty = true;
     }
 
+    public boolean hasFlag(RegionFlagType type) {
+        return flags.containsKey(type);
+    }
+
     public RegionFlag removeFlag(RegionFlagType type) {
-        dirty = true;
         RegionFlag flag = flags.remove(type);
         if (flag != null)
             flag.setDeleted(true);

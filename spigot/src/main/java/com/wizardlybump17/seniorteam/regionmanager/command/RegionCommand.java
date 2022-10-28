@@ -269,13 +269,20 @@ public record RegionCommand(RegionManager plugin) {
             return;
         }
 
-        region.addFlag(new RegionFlag(
-                ThreadLocalRandom.current().nextInt(),
-                type,
-                value,
-                region.getName()
-        ));
-        region.save();
+        if (region.hasFlag(type)) {
+            RegionFlag flag = region.getFlag(type);
+            flag.setValue(value);
+            flag.save();
+        } else {
+            region.addFlag(new RegionFlag(
+                    ThreadLocalRandom.current().nextInt(),
+                    type,
+                    value,
+                    region.getName()
+            ));
+            region.save();
+        }
+
         sender.sendMessage(
                 flagSet
                         .replace("{region}", region.getName())
@@ -307,7 +314,7 @@ public record RegionCommand(RegionManager plugin) {
         }
 
         flag.save();
-        region.save();
+
         sender.sendMessage(
                 flagUnset
                         .replace("{region}", region.getName())

@@ -7,6 +7,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFl
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagTypes;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,16 +31,19 @@ public record RegionListener(RegionManager plugin) implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void blockBreak(BlockBreakEvent event) {
-        testRegion(RegionFlagTypes.BREAK_BLOCK, event.getBlock().getLocation(), event.getPlayer());
+        event.setCancelled(!testRegion(RegionFlagTypes.BREAK_BLOCK, event.getBlock().getLocation(), event.getPlayer()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void blockPlace(BlockPlaceEvent event) {
-        testRegion(RegionFlagTypes.PLACE_BLOCK, event.getBlock().getLocation(), event.getPlayer());
+        event.setCancelled(!testRegion(RegionFlagTypes.PLACE_BLOCK, event.getBlock().getLocation(), event.getPlayer()));
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void interact(PlayerInteractEvent event) {
+        if (event.useItemInHand() == Event.Result.DENY && event.useInteractedBlock() == Event.Result.DENY)
+            return;
+
         Player player = event.getPlayer();
         RegionFlagType type;
         Location location;

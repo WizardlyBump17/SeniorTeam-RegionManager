@@ -2,6 +2,8 @@ package com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value;
 
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class BooleanFlagValue implements RegionFlagValue<Boolean> {
 
@@ -18,5 +20,9 @@ public class BooleanFlagValue implements RegionFlagValue<Boolean> {
     @Override
     public Boolean getValue() {
         return value;
+    }
+
+    public static BooleanFlagValue deserialize(Map<String, Object> map) {
+        return (boolean) map.get("value") ? TRUE : FALSE;
     }
 }

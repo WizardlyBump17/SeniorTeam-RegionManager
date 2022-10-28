@@ -6,6 +6,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagTypes;
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.BooleanFlagValue;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.reader.BooleanFlagValueReader;
 import com.wizardlybump17.seniorteam.regionmanager.api.registry.RegionFlagValueReaderRegistry;
 import com.wizardlybump17.wlib.database.BukkitDatabaseHolder;
@@ -13,6 +14,7 @@ import com.wizardlybump17.wlib.database.Database;
 import com.wizardlybump17.wlib.database.DatabaseRegister;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.ResultSet;
@@ -50,6 +52,7 @@ public abstract class RegionManager extends JavaPlugin {
     }
 
     protected void initConfigs() {
+        ConfigurationSerialization.registerClass(BooleanFlagValue.class);
     }
 
     @Override
@@ -72,7 +75,9 @@ public abstract class RegionManager extends JavaPlugin {
             try (ResultSet query = regionsDatabase.query("SELECT * FROM region;")) {
                 while (query.next()) {
                     Map<RegionFlagType, RegionFlag> flags = new HashMap<>();
-                    try (ResultSet flagQuery = regionsDatabase.query("SELECT * FROM flag;")) {
+                    Region region = Region.load(query, flags);
+
+                    try (ResultSet flagQuery = regionsDatabase.query("SELECT * FROM flag WHERE region_name = ?;", region.getName())) {
                         while (flagQuery.next()) {
                             RegionFlag flag = RegionFlag.load(flagQuery, regionFlagTypeCache);
                             flag.setInDatabase(true);
@@ -80,7 +85,6 @@ public abstract class RegionManager extends JavaPlugin {
                         }
                     }
 
-                    Region region = Region.load(query, flags);
                     region.setInDatabase(true);
                     regionCache.add(region);
                 }

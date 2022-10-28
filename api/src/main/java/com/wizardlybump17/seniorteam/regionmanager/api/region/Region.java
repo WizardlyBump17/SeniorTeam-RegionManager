@@ -89,7 +89,7 @@ public class Region implements DatabaseStorable {
     public boolean isInside(Location location) {
         if (location.getWorld() == null)
             return false;
-        return location.getWorld().getName().equals(name) && isInside(location.toVector());
+        return location.getWorld().getName().equals(world) && isInside(location.toVector());
     }
 
     @Nullable
@@ -105,9 +105,9 @@ public class Region implements DatabaseStorable {
         dirty = true;
     }
 
-    public void removeFlag(RegionFlagType type) {
-        flags.remove(type);
+    public RegionFlag removeFlag(RegionFlagType type) {
         dirty = true;
+        return flags.remove(type);
     }
 
     public void save() {
@@ -123,9 +123,9 @@ public class Region implements DatabaseStorable {
     }
 
     public boolean test(RegionFlag flag, Player player) {
-        if (players.contains(player.getUniqueId()))
+        if (players.contains(player.getUniqueId()) || flag == null)
             return true;
-        return flag != null && flag.test(player);
+        return flag.test(player);
     }
 
     public boolean hasPlayer(UUID player) {

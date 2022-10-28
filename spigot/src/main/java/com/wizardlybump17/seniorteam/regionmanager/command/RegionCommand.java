@@ -13,6 +13,7 @@ import com.wizardlybump17.wlib.command.sender.GenericSender;
 import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -45,6 +46,8 @@ public record RegionCommand(RegionManager plugin) {
     public static String flagUnset = "§aFlag §f{type} §aunset from region §f{region}";
     @Path(value = "messages.flag.not-set", options = "fancy")
     public static String flagNotSet = "§cFlag §f{type} §cis not set in region §f{region}";
+    @Path(value = "messages.region.info", options = "fancy")
+    public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -210,6 +213,27 @@ public record RegionCommand(RegionManager plugin) {
                         .replace("{region}", region.getName())
                         .replace("{type}", type.getName())
                         .replace("{value}", flag.getValue().getValue().toString())
+        );
+    }
+
+    @Command(execution = "region <region> info", permission = PERMISSION)
+    public void info(GenericSender sender, Region region) {
+        if (region == null) {
+            sender.sendMessage(Configuration.Messages.invalidRegion);
+            return;
+        }
+
+        sender.sendMessage(
+                regionInfo
+                        .replace("{region}", region.getName())
+                        .replace("{flags}", region.getFlags().values().stream()
+                                .map(flag -> flag.getType().getName() + ": " + flag.getValue().getValue().toString())
+                                .collect(Collectors.joining(", "))
+                        )
+                        .replace("{players}", region.getPlayers().stream()
+                                .map(uuid -> Bukkit.getOfflinePlayer(uuid).getName())
+                                .collect(Collectors.joining(", "))
+                        )
         );
     }
 }

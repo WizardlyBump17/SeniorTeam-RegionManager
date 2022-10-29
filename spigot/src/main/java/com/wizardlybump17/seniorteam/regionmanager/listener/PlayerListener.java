@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 public record PlayerListener(RegionManager plugin) implements Listener {
 
@@ -20,7 +21,8 @@ public record PlayerListener(RegionManager plugin) implements Listener {
     public void markPositions(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
-        if (event.getHand() != EquipmentSlot.HAND || event.getItem().getType() != Material.WOODEN_AXE || !player.hasPermission("regionmanager.admin"))
+        ItemStack item = event.getItem();
+        if (item == null || event.getHand() != EquipmentSlot.HAND || item.getType() != Material.WOODEN_AXE || !player.hasPermission("regionmanager.admin"))
             return;
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {

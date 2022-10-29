@@ -20,7 +20,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Map;
 
-@ConfigInfo(name = "inventories/region.yml", holderType = RegionManager.class)
+@ConfigInfo(name = "inventories/region/region.yml", holderType = RegionManager.class)
 public record RegionInventory(Region region, RegionsInventory previous) {
 
     @Path("inventory")

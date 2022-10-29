@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-@ConfigInfo(name = "inventories/regions.yml", holderType = RegionManager.class)
+@ConfigInfo(name = "inventories/region/regions.yml", holderType = RegionManager.class)
 public record RegionsInventory(RegionCache cache) {
 
     @Path("inventory")

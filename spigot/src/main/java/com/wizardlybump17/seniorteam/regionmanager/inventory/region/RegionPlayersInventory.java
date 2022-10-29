@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@ConfigInfo(name = "inventories/region-players.yml", holderType = RegionManager.class)
+@ConfigInfo(name = "inventories/region/region-players.yml", holderType = RegionManager.class)
 public record RegionPlayersInventory(Region region, RegionInventory previous) {
 
     @Path("inventory")

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@ConfigInfo(name = "inventories/region-flags.yml", holderType = RegionManager.class)
+@ConfigInfo(name = "inventories/region/region-flags.yml", holderType = RegionManager.class)
 public record RegionFlagsInventory(Region region, RegionInventory previous, RegionFlagTypeCache cache, RegionFlagValueReaderRegistry valueReaderRegistry) {
 
     @Path("inventory")

@@ -11,6 +11,10 @@ public class BooleanFlagValueReader extends RegionFlagValueReader<BooleanFlagVal
 
     @Override
     public BooleanFlagValue read(String string) {
-        return string.equalsIgnoreCase("true") ? BooleanFlagValue.TRUE : BooleanFlagValue.FALSE;
+        if (string.equalsIgnoreCase("true"))
+            return new BooleanFlagValue(true);
+        if (string.equalsIgnoreCase("false"))
+            return new BooleanFlagValue(false);
+        return null;
     }
 }

@@ -6,6 +6,8 @@ import com.wizardlybump17.wlib.object.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class RegionFlagTypeCache extends Cache<String, RegionFlagType, RegionFlagType> {
@@ -28,5 +30,10 @@ public class RegionFlagTypeCache extends Cache<String, RegionFlagType, RegionFla
     @Override
     public Optional<RegionFlagType> remove(@Nullable String key) {
         return super.remove(key == null ? null : key.toLowerCase());
+    }
+
+    @Override
+    protected @NotNull Map<String, RegionFlagType> getInitialMap() {
+        return new LinkedHashMap<>();
     }
 }

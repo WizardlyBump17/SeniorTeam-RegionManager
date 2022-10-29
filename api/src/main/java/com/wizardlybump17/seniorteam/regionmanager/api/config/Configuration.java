@@ -34,7 +34,9 @@ public class Configuration {
             @Path(value = "type-name", options = "fancy")
             public static String typeName = "\n§aType the new region name\nType §ccancel §ato cancel\n ";
             @Path(value = "type-player", options = "fancy")
-            public static String typePlayer = "§aType the player name\nType §ccancel §ato cancel";
+            public static String typePlayer = "\n§aType the player name\nType §ccancel §ato cancel\n ";
+            @Path(value = "type-new-value", options = "fancy")
+            public static String typeNewValue = "\n§aType the new value for the flag §f{flag}\n§aType §ccancel §ato cancel\n ";
         }
     }
 }

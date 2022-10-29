@@ -1,5 +1,6 @@
 package com.wizardlybump17.seniorteam.regionmanager.api.registry;
 
+import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.reader.RegionFlagValueReader;
 import com.wizardlybump17.wlib.object.Registry;
 
@@ -10,7 +11,7 @@ public class RegionFlagValueReaderRegistry extends Registry<Class<?>, RegionFlag
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T read(String string) {
+    public <T extends RegionFlagValue<?>> T read(String string) {
         for (RegionFlagValueReader<?> reader : getMap().values())
             if (reader.read(string) != null)
                 return (T) reader.read(string);

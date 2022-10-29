@@ -8,6 +8,7 @@ import com.wizardlybump17.seniorteam.regionmanager.command.reader.RegionFlagValu
 import com.wizardlybump17.seniorteam.regionmanager.inventory.RegionInventory;
 import com.wizardlybump17.seniorteam.regionmanager.inventory.RegionPlayersInventory;
 import com.wizardlybump17.seniorteam.regionmanager.inventory.RegionsInventory;
+import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionFlagsInventory;
 import com.wizardlybump17.seniorteam.regionmanager.listener.PlayerListener;
 import com.wizardlybump17.seniorteam.regionmanager.listener.RegionListener;
 import com.wizardlybump17.wlib.command.CommandManager;
@@ -44,6 +45,7 @@ public class RegionManager extends com.wizardlybump17.seniorteam.regionmanager.a
         ConfigHandlerRegistry.getInstance().register(RegionsInventory.class);
         ConfigHandlerRegistry.getInstance().register(RegionInventory.class);
         ConfigHandlerRegistry.getInstance().register(RegionPlayersInventory.class);
+        ConfigHandlerRegistry.getInstance().register(RegionFlagsInventory.class);
     }
 
     private void initCommands() {

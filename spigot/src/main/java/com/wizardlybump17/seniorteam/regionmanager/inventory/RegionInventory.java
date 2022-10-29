@@ -4,6 +4,7 @@ import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.command.RegionCommand;
+import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionFlagsInventory;
 import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
@@ -27,7 +28,7 @@ public record RegionInventory(Region region, RegionsInventory previous) {
     public static PaginatedInventoryBuilder inventory = PaginatedInventoryBuilder.create()
             .title("{region}")
             .shape("    R    " +
-                    " N  P  L " +
+                    " N P F L " +
                     "    @    "
             )
             .shapeReplacement('R', new ItemButton(
@@ -46,6 +47,12 @@ public record RegionInventory(Region region, RegionsInventory previous) {
                             .type(Material.PLAYER_HEAD)
                             .displayName("§aPlayers")
                             .customData("action", "players")
+            ))
+            .shapeReplacement('F', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BLUE_BANNER)
+                            .displayName("§aFlags")
+                            .customData("action", "flags")
             ))
             .shapeReplacement('L', new ItemButton(
                     new ItemBuilder()
@@ -82,6 +89,7 @@ public record RegionInventory(Region region, RegionsInventory previous) {
             entry.setValue(switch (action.toLowerCase()) {
                 case "rename" -> getRenameItem(button);
                 case "players" -> getPlayersItem(button);
+                case "flags" -> getFlagsItem(button);
                 default -> button;
             });
         }
@@ -143,6 +151,19 @@ public record RegionInventory(Region region, RegionsInventory previous) {
         return new ItemButton(
                 InventoryUtil.formatRegionItem(button.getItem().get(), region),
                 (event, inventory) -> new RegionPlayersInventory(region, this).show((Player) event.getWhoClicked(), 0)
+        );
+    }
+
+    private ItemButton getFlagsItem(ItemButton button) {
+        return new ItemButton(
+                InventoryUtil.formatRegionItem(button.getItem().get(), region),
+                (event, inventory) -> new RegionFlagsInventory(
+                        region,
+                        this,
+                        RegionManager.getInstance().getRegionFlagTypeCache(),
+                        RegionManager.getInstance().getRegionFlagValueReaderRegistry()).show((Player) event.getWhoClicked(),
+                        0
+                )
         );
     }
 }

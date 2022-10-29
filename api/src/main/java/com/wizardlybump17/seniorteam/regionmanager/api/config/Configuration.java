@@ -32,7 +32,7 @@ public class Configuration {
             @Path(value = "pos-2", options = "fancy")
             public static String pos2 = "§aPosition 2 set to §f{position}";
             @Path(value = "type-name", options = "fancy")
-            public static String typeName = "§aType the new region name\nType §ccancel §ato cancel";
+            public static String typeName = "\n§aType the new region name\nType §ccancel §ato cancel\n ";
             @Path(value = "type-player", options = "fancy")
             public static String typePlayer = "§aType the player name\nType §ccancel §ato cancel";
         }

@@ -56,43 +56,6 @@ public record RegionCommand(RegionManager plugin) {
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
     @Path(value = "messages.region.renamed", options = "fancy")
     public static String regionRenamed = "§aRegion renamed to §f{region}";
-    @Path("inventory.region")
-    public static PaginatedInventoryBuilder regionInventory = PaginatedInventoryBuilder.create()
-            .title("Region: {region}")
-            .shape("    R    " +
-                    " N  P  L " +
-                    "    @    "
-            )
-            .shapeReplacement('R', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.BRICKS)
-                            .displayName("§f{region}")
-            ))
-            .shapeReplacement('N', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.NAME_TAG)
-                            .displayName("§aRename")
-                            .customData("action", "rename")
-            ))
-            .shapeReplacement('P', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.PLAYER_HEAD)
-                            .displayName("§aPlayers")
-                            .customData("action", "players")
-            ))
-            .shapeReplacement('L', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.COMPASS)
-                            .displayName("§aLocation")
-                            .customData("action", "location")
-            ))
-            .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
-            .shapeReplacement('@', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.BARRIER)
-                            .displayName("§cBack")
-                            .customData("action", "back")
-            ));
     @Path("inventory.players")
     public static PaginatedInventoryBuilder playersInventory = PaginatedInventoryBuilder.create()
             .title("Players in region: {region}")

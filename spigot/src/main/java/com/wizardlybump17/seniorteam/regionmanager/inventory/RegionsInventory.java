@@ -12,11 +12,9 @@ import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @ConfigInfo(name = "inventories/regions.yml", holderType = RegionManager.class)
 public record RegionsInventory(RegionCache cache) {
@@ -65,22 +63,13 @@ public record RegionsInventory(RegionCache cache) {
         ItemButton base = builder.shapeReplacements().get('x');
         for (Region region : cache.getAll()) {
             content.add(new ItemButton(
-                    formatRegionItem(base.getItem().get().clone(), region),
-                    (event, inventory) -> {
-
-                    }
+                    InventoryUtil.formatRegionItem(base.getItem().get().clone(), region),
+                    (event, inventory) -> new RegionInventory(region, this).show(player)
             ));
         }
 
         builder.content(content);
 
         builder.build().show(player);
-    }
-
-    public static ItemBuilder formatRegionItem(ItemStack original, Region region) {
-        return ItemBuilder.fromItemStack(original)
-                .replaceDisplayNameLore(
-                        Map.of("{region}", region.getName())
-                );
     }
 }

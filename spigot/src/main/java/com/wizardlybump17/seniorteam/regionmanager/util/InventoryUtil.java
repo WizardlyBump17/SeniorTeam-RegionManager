@@ -1,10 +1,12 @@
 package com.wizardlybump17.seniorteam.regionmanager.util;
 
+import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +49,13 @@ public class InventoryUtil {
                 original.getClickAction(),
                 original.getCustomData()
         );
+    }
+
+    public static ItemBuilder formatRegionItem(ItemStack original, Region region) {
+        return ItemBuilder.fromItemStack(original)
+                .replaceDisplayNameLore(
+                        Map.of("{region}", region.getName())
+                );
     }
 
 //    @UtilityClass

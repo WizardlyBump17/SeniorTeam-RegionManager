@@ -1,10 +1,9 @@
-package com.wizardlybump17.seniorteam.regionmanager.inventory;
+package com.wizardlybump17.seniorteam.regionmanager.inventory.region;
 
 import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.command.RegionCommand;
-import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionFlagsInventory;
 import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;

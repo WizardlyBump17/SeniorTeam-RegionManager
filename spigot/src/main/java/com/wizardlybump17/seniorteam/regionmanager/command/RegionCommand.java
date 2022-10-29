@@ -7,7 +7,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
-import com.wizardlybump17.seniorteam.regionmanager.inventory.RegionsInventory;
+import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionsInventory;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.sender.GenericSender;

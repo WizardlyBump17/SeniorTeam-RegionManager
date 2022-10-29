@@ -8,7 +8,6 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
 import com.wizardlybump17.seniorteam.regionmanager.api.registry.RegionFlagValueReaderRegistry;
-import com.wizardlybump17.seniorteam.regionmanager.inventory.RegionInventory;
 import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;

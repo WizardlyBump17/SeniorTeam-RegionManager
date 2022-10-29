@@ -1,4 +1,4 @@
-package com.wizardlybump17.seniorteam.regionmanager.inventory;
+package com.wizardlybump17.seniorteam.regionmanager.inventory.region;
 
 import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
 import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;

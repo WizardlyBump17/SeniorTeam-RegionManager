@@ -81,6 +81,7 @@ public record RegionInventory(Region region, RegionsInventory previous) {
 
             entry.setValue(switch (action.toLowerCase()) {
                 case "rename" -> getRenameItem(button);
+                case "players" -> getPlayersItem(button);
                 default -> button;
             });
         }
@@ -139,5 +140,12 @@ public record RegionInventory(Region region, RegionsInventory previous) {
             player.performCommand("region \"" + region.getName() + "\" \"rename\" \"" + event.getMessage() + "\"");
             Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> show(player));
         });
+    }
+
+    private ItemButton getPlayersItem(ItemButton button) {
+        return new ItemButton(
+                InventoryUtil.formatRegionItem(button.getItem().get(), region),
+                (event, inventory) -> new RegionPlayersInventory(region, this).show((Player) event.getWhoClicked(), 0)
+        );
     }
 }

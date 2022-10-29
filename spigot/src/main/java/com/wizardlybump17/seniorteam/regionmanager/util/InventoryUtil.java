@@ -109,71 +109,6 @@ public class InventoryUtil {
 //
 //
 //
-//        private static ItemButton getRenameItem(ItemButton button, Region region) {
-//            return new ItemButton(
-//                    formatRegionItem(button.getItem().get(), region),
-//                    (event, inventory) -> {
-//                        inventory.setUnregisterListeners(false);
-//
-//                        HumanEntity entity = event.getWhoClicked();
-//                        inventory.setData("player", entity);
-//                        inventory.setData("region", region);
-//                        inventory.setData("action", "rename");
-//
-//                        entity.sendMessage(Configuration.Messages.Region.typeName);
-//                        entity.closeInventory();
-//                    }
-//            );
-//        }
-//
-//        private static void handleRename(AsyncPlayerChatEvent event, PaginatedInventory inventory) {
-//            Player player = event.getPlayer();
-//
-//            if (player != inventory.getData("player") || !"rename".equals(inventory.getData("action")))
-//                return;
-//
-//            event.setCancelled(true);
-//
-//            Region region = inventory.getData("region");
-//
-//            if (event.getMessage().equalsIgnoreCase("cancel")) {
-//                inventory.stopListeners();
-//
-//                PaginatedInventoryBuilder builder = RegionCommand.regionInventory.clone();
-//                formatRegionInventory(builder, region, () -> player.performCommand("region list"));
-//                Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> builder.build().show(player));
-//                return;
-//            }
-//
-//            if (RegionManager.getInstance().getRegionCache().get(event.getMessage()).isPresent()) {
-//                player.sendMessage(RegionCommand.regionAlreadyExists);
-//                return;
-//            }
-//
-//            inventory.stopListeners();
-//            Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> {
-//                player.performCommand("region \"" + region.getName() + "\" \"rename\" \"" + event.getMessage() + "\"");
-//
-//                PaginatedInventoryBuilder builder = RegionCommand.regionInventory.clone();
-//                formatRegionInventory(builder, region, () -> player.performCommand("region list"));
-//                builder.build().show(player);
-//            });
-//        }
-//
-//        private static ItemButton getPlayersItem(ItemButton button, Region region) {
-//            return new ItemButton(
-//                    formatRegionItem(button.getItem().get(), region),
-//                    (event, inventory) -> {
-//                        PaginatedInventoryBuilder builder = RegionCommand.playersInventory.clone();
-//                        formatPlayersInventory(builder, region, () -> {
-//                            PaginatedInventoryBuilder regionInventory = RegionCommand.regionInventory.clone();
-//                            formatRegionInventory(regionInventory, region, () -> ((Player) event.getWhoClicked()).performCommand("region list"));
-//                            regionInventory.build().show(event.getWhoClicked());
-//                        });
-//                        builder.build().show(event.getWhoClicked());
-//                    }
-//            );
-//        }
 //
 //        private static void formatPlayersInventory(PaginatedInventoryBuilder builder, Region region, Runnable previous) {
 //            formatCloseButton(builder);
@@ -198,30 +133,6 @@ public class InventoryUtil {
 //                }
 //            }
 //
-//            List<ItemButton> content = new ArrayList<>();
-//            for (UUID player : region.getPlayers()) {
-//                content.add(applyHead(
-//                        new ItemButton(
-//                                formatRegionItem(builder.shapeReplacements().get('x').getItem().get().clone(), region),
-//                                (event, inventory) -> {
-//                                    if (event.getClick() != ClickType.DOUBLE_CLICK)
-//                                        return;
-//
-//                                    ((Player) event.getWhoClicked()).performCommand("region \"" + region.getName() + "\" \"player\" \"remove\" \"" + player + "\"");
-//
-//                                    PaginatedInventoryBuilder newBuilder = RegionCommand.playersInventory.clone();
-//                                    formatPlayersInventory(newBuilder, region, () -> {
-//                                        PaginatedInventoryBuilder regionInventory = RegionCommand.regionInventory.clone();
-//                                        formatRegionInventory(regionInventory, region, () -> ((Player) event.getWhoClicked()).performCommand("region list"));
-//                                        regionInventory.build().show(event.getWhoClicked());
-//                                    });
-//                                    newBuilder.build().show(event.getWhoClicked(), inventory.getCurrentPage());
-//                                }
-//                        ),
-//                        player
-//                ));
-//            }
-//            builder.content(content);
 //        }
 //    }
 }

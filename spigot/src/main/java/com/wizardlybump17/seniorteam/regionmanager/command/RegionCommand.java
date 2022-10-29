@@ -14,13 +14,8 @@ import com.wizardlybump17.wlib.command.sender.GenericSender;
 import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
-import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
-import com.wizardlybump17.wlib.inventory.item.ItemButton;
-import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
-import com.wizardlybump17.wlib.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.util.Vector;
 
@@ -45,7 +40,7 @@ public record RegionCommand(RegionManager plugin) {
     @Path(value = "messages.player.added", options = "fancy")
     public static String playerAdded = "§aAdded §f{player} §ato region §f{region}";
     @Path(value = "messages.player.removed", options = "fancy")
-    public static String playerRemoved = "§aPlayer §f{player} §afrom region §f{region}";
+    public static String playerRemoved = "§aPlayer §f{player} §aremoved from region §f{region}";
     @Path(value = "messages.flag.set", options = "fancy")
     public static String flagSet = "§aFlag §f{type} §aset to §f{value} §ain region §f{region}";
     @Path(value = "messages.flag.unset", options = "fancy")
@@ -56,52 +51,6 @@ public record RegionCommand(RegionManager plugin) {
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
     @Path(value = "messages.region.renamed", options = "fancy")
     public static String regionRenamed = "§aRegion renamed to §f{region}";
-    @Path("inventory.players")
-    public static PaginatedInventoryBuilder playersInventory = PaginatedInventoryBuilder.create()
-            .title("Players in region: {region}")
-            .shape("    R    " +
-                    " xxxxxxx " +
-                    "< A @   >"
-            )
-            .shapeReplacement('R', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.BRICKS)
-                            .displayName("§f{region}")
-            ))
-            .shapeReplacement('A', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.PLAYER_HEAD)
-                            .displayName("§aAdd player")
-            ))
-            .shapeReplacement('x', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.PLAYER_HEAD)
-                            .displayName("§f{player}")
-                            .lore("§7Double-click to remove")
-                            .customData("action", "remove")
-                            .customData("apply-head", true)
-            ))
-            .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
-            .nextPage(new InventoryNavigator(
-                    new ItemBuilder()
-                            .type(Material.ARROW)
-                            .displayName("§aNext page")
-                            .build(),
-                    ' '
-            ))
-            .previousPage(new InventoryNavigator(
-                    new ItemBuilder()
-                            .type(Material.ARROW)
-                            .displayName("§aPrevious page")
-                            .build(),
-                    ' '
-            ))
-            .shapeReplacement('@', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.BARRIER)
-                            .displayName("§cBack")
-                            .customData("action", "back")
-            ));
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {

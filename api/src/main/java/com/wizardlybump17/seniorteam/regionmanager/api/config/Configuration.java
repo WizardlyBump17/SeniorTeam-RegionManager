@@ -33,6 +33,8 @@ public class Configuration {
             public static String pos2 = "§aPosition 2 set to §f{position}";
             @Path(value = "type-name", options = "fancy")
             public static String typeName = "§aType the new region name\nType §ccancel §ato cancel";
+            @Path(value = "type-player", options = "fancy")
+            public static String typePlayer = "§aType the player name\nType §ccancel §ato cancel";
         }
     }
 }

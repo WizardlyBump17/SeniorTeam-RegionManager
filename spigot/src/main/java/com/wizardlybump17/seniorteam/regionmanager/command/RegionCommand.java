@@ -7,7 +7,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
-import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
+import com.wizardlybump17.seniorteam.regionmanager.inventory.RegionsInventory;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.command.Command;
 import com.wizardlybump17.wlib.command.sender.GenericSender;
@@ -21,7 +21,7 @@ import com.wizardlybump17.wlib.item.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -56,40 +56,6 @@ public record RegionCommand(RegionManager plugin) {
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
     @Path(value = "messages.region.renamed", options = "fancy")
     public static String regionRenamed = "§aRegion renamed to §f{region}";
-    @Path("inventory.region-list")
-    public static PaginatedInventoryBuilder regionsInventory = PaginatedInventoryBuilder.create()
-            .title("Regions")
-            .shape("         " +
-                    " xxxxxxx " +
-                    "<   @   >"
-            )
-            .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
-            .shapeReplacement('x', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.BRICKS)
-                            .displayName("§f{region}")
-                            .lore("§7Click to see more info")
-            ))
-            .nextPage(new InventoryNavigator(
-                    new ItemBuilder()
-                            .type(Material.ARROW)
-                            .displayName("§aNext page")
-                            .build(),
-                    ' '
-            ))
-            .previousPage(new InventoryNavigator(
-                    new ItemBuilder()
-                            .type(Material.ARROW)
-                            .displayName("§aPrevious page")
-                            .build(),
-                    ' '
-            ))
-            .shapeReplacement('@', new ItemButton(
-                    new ItemBuilder()
-                            .type(Material.BARRIER)
-                            .displayName("§cClose")
-                            .customData("action", "close")
-            ));
     @Path("inventory.region")
     public static PaginatedInventoryBuilder regionInventory = PaginatedInventoryBuilder.create()
             .title("Region: {region}")
@@ -119,6 +85,38 @@ public record RegionCommand(RegionManager plugin) {
                             .type(Material.COMPASS)
                             .displayName("§aLocation")
                             .customData("action", "location")
+            ))
+            .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
+            .shapeReplacement('@', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BARRIER)
+                            .displayName("§cBack")
+                            .customData("action", "back")
+            ));
+    @Path("inventory.players")
+    public static PaginatedInventoryBuilder playersInventory = PaginatedInventoryBuilder.create()
+            .title("Players in region: {region}")
+            .shape("    R    " +
+                    " xxxxxxx " +
+                    "< A @   >"
+            )
+            .shapeReplacement('R', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.BRICKS)
+                            .displayName("§f{region}")
+            ))
+            .shapeReplacement('A', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.PLAYER_HEAD)
+                            .displayName("§aAdd player")
+            ))
+            .shapeReplacement('x', new ItemButton(
+                    new ItemBuilder()
+                            .type(Material.PLAYER_HEAD)
+                            .displayName("§f{player}")
+                            .lore("§7Double-click to remove")
+                            .customData("action", "remove")
+                            .customData("apply-head", true)
             ))
             .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
             .nextPage(new InventoryNavigator(
@@ -157,9 +155,7 @@ public record RegionCommand(RegionManager plugin) {
 
     @Command(execution = "region list", permission = PERMISSION, priority = 3)
     public void list(PlayerSender sender) {
-        PaginatedInventoryBuilder builder = regionsInventory.clone();
-        InventoryUtil.RegionInventory.formatRegionsInventory(builder, plugin.getRegionCache());
-        builder.build().show(sender.getHandle());
+        new RegionsInventory(plugin.getRegionCache()).show(sender.getHandle());
     }
 
     @Command(execution = "region create <name>", permission = PERMISSION)
@@ -209,7 +205,7 @@ public record RegionCommand(RegionManager plugin) {
     }
 
     @Command(execution = "region <region> player add <player>", permission = PERMISSION)
-    public void playerAdd(GenericSender sender, Region region, Player player) {
+    public void playerAdd(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
             return;
@@ -231,7 +227,7 @@ public record RegionCommand(RegionManager plugin) {
     }
 
     @Command(execution = "region <region> player remove <player>", permission = PERMISSION)
-    public void playerRemove(GenericSender sender, Region region, Player player) {
+    public void playerRemove(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
             return;

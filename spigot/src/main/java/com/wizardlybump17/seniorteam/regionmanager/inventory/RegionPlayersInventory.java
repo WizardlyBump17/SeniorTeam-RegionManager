@@ -1,17 +1,23 @@
 package com.wizardlybump17.seniorteam.regionmanager.inventory;
 
 import com.wizardlybump17.seniorteam.regionmanager.RegionManager;
+import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
 import com.wizardlybump17.wlib.inventory.item.InventoryNavigator;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
+import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
+import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +43,7 @@ public record RegionPlayersInventory(Region region, RegionInventory previous) {
                     new ItemBuilder()
                             .type(Material.PLAYER_HEAD)
                             .displayName("§aAdd player")
+                            .customData("action", "add-player")
             ))
             .shapeReplacement('x', new ItemButton(
                     new ItemBuilder()
@@ -86,6 +93,7 @@ public record RegionPlayersInventory(Region region, RegionInventory previous) {
             }
 
             entry.setValue(switch (action.toLowerCase()) {
+                case "add-player" -> getAddPlayerItem(button);
                 default -> button;
             });
         }
@@ -93,6 +101,12 @@ public record RegionPlayersInventory(Region region, RegionInventory previous) {
         addContent(builder);
 
         builder
+                .listener(InventoryListener.<AsyncPlayerChatEvent>builder()
+                        .plugin(RegionManager.getInstance())
+                        .eventClass(AsyncPlayerChatEvent.class)
+                        .consumer(this::handleAddPlayer)
+                        .build()
+                )
                 .build()
                 .show(player, page);
     }
@@ -115,5 +129,51 @@ public record RegionPlayersInventory(Region region, RegionInventory previous) {
             ));
         }
         builder.content(content);
+    }
+
+    private ItemButton getAddPlayerItem(ItemButton button) {
+        return new ItemButton(
+                InventoryUtil.formatRegionItem(button.getItem().get(), region),
+                (event, inventory) -> {
+                    inventory.setUnregisterListeners(false);
+
+                    HumanEntity entity = event.getWhoClicked();
+                    inventory.setData("player", entity);
+                    inventory.setData("action", "add-player");
+
+                    entity.sendMessage(Configuration.Messages.Region.typePlayer);
+                    entity.closeInventory();
+                },
+                button.getCustomData()
+        );
+    }
+
+    private void handleAddPlayer(AsyncPlayerChatEvent event, PaginatedInventory inventory) {
+        Player player = event.getPlayer();
+
+        if (player != inventory.getData("player") || !"add-player".equals(inventory.getData("action")))
+            return;
+
+        event.setCancelled(true);
+
+        if (event.getMessage().equalsIgnoreCase("cancel")) {
+            inventory.stopListeners();
+            Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> show(player, inventory.getCurrentPage()));
+            return;
+        }
+
+        Player target = Bukkit.getPlayerExact(event.getMessage());
+        if (target == null) {
+            player.sendMessage(Configuration.Messages.invalidPlayer);
+            player.sendMessage(Configuration.Messages.Region.typePlayer);
+            return;
+        }
+
+        inventory.stopListeners();
+
+        Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> {
+            player.performCommand("region \"" + region.getName() + "\" \"player\" \"add\" \"" + target.getUniqueId() + "\"");
+            show(player, inventory.getCurrentPage());
+        });
     }
 }

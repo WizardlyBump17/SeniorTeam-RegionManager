@@ -105,7 +105,6 @@ public record RegionInventory(Region region, RegionsInventory previous) {
 
                     HumanEntity entity = event.getWhoClicked();
                     inventory.setData("player", entity);
-                    inventory.setData("region", region);
                     inventory.setData("action", "rename");
 
                     entity.sendMessage(Configuration.Messages.Region.typeName);
@@ -121,8 +120,6 @@ public record RegionInventory(Region region, RegionsInventory previous) {
             return;
 
         event.setCancelled(true);
-
-        Region region = inventory.getData("region");
 
         if (event.getMessage().equalsIgnoreCase("cancel")) {
             inventory.stopListeners();

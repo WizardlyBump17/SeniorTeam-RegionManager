@@ -5,6 +5,7 @@ import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.command.RegionCommand;
 import com.wizardlybump17.seniorteam.regionmanager.util.InventoryUtil;
+import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
 import com.wizardlybump17.wlib.inventory.item.ItemButton;
@@ -12,7 +13,9 @@ import com.wizardlybump17.wlib.inventory.listener.InventoryListener;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventory;
 import com.wizardlybump17.wlib.inventory.paginated.PaginatedInventoryBuilder;
 import com.wizardlybump17.wlib.item.ItemBuilder;
+import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -56,8 +59,15 @@ public record RegionInventory(Region region, RegionsInventory previous) {
             .shapeReplacement('L', new ItemButton(
                     new ItemBuilder()
                             .type(Material.COMPASS)
-                            .displayName("§aLocation")
-                            .customData("action", "location")
+                            .displayName("§aPositions")
+                            .lore(
+                                    "§ePosition 1: §f{min-pos}",
+                                    "§ePosition 2: §f{max-pos}",
+                                    "§eWorld: §f{world}",
+                                    "",
+                                    "§7Click here to edit"
+                            )
+                            .customData("action", "positions")
             ))
             .shapeReplacement(' ', new ItemButton(new ItemBuilder().type(Material.BLACK_STAINED_GLASS_PANE).displayName(" ")))
             .shapeReplacement('@', new ItemButton(
@@ -89,6 +99,7 @@ public record RegionInventory(Region region, RegionsInventory previous) {
                 case "rename" -> getRenameItem(button);
                 case "players" -> getPlayersItem(button);
                 case "flags" -> getFlagsItem(button);
+                case "positions" -> getLocationItem(button);
                 default -> button;
             });
         }
@@ -98,6 +109,12 @@ public record RegionInventory(Region region, RegionsInventory previous) {
                         .plugin(RegionManager.getInstance())
                         .eventClass(AsyncPlayerChatEvent.class)
                         .consumer(this::handleRename)
+                        .build()
+                )
+                .listener(InventoryListener.<AsyncPlayerChatEvent>builder()
+                        .plugin(RegionManager.getInstance())
+                        .eventClass(AsyncPlayerChatEvent.class)
+                        .consumer(this::handleSavePositions)
                         .build()
                 )
                 .build()
@@ -164,5 +181,56 @@ public record RegionInventory(Region region, RegionsInventory previous) {
                         0
                 )
         );
+    }
+
+    private ItemButton getLocationItem(ItemButton button) {
+        return new ItemButton(
+                InventoryUtil.formatRegionItem(button.getItem().get(), region)
+                        .replaceDisplayNameLore(Map.of(
+                                "{min-pos}", StringUtil.toString(region.getMinPos()),
+                                "{max-pos}", StringUtil.toString(region.getMaxPos()),
+                                "{world}", region.getWorld()
+                        )),
+                (event, inventory) -> {
+                    inventory.setUnregisterListeners(false);
+
+                    HumanEntity entity = event.getWhoClicked();
+                    inventory.setData("player", entity);
+                    inventory.setData("action", "positions");
+
+                    entity.sendMessage(Configuration.Messages.Region.markPositions);
+                    entity.closeInventory();
+                }
+        );
+    }
+
+    private void handleSavePositions(AsyncPlayerChatEvent event, PaginatedInventory inventory) {
+        Player player = event.getPlayer();
+
+        if (player != inventory.getData("player") || !"positions".equals(inventory.getData("action")))
+            return;
+
+        event.setCancelled(true);
+
+        if (event.getMessage().equalsIgnoreCase("cancel")) {
+            inventory.stopListeners();
+            Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> show(player));
+            return;
+        }
+
+        if (!event.getMessage().equalsIgnoreCase("save"))
+            return;
+
+        Location[] positions = PlayerUtil.getMarkedPositions(player);
+        if (positions[0] == null || positions[1] == null || !positions[0].getWorld().equals(positions[1].getWorld())) {
+            player.sendMessage(Configuration.Messages.invalidPositions);
+            return;
+        }
+
+        inventory.stopListeners();
+        Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> {
+            player.performCommand("region \"" + region.getName() + "\" \"update-position\"");
+            Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> show(player));
+        });
     }
 }

@@ -14,6 +14,7 @@ import com.wizardlybump17.wlib.command.sender.GenericSender;
 import com.wizardlybump17.wlib.command.sender.PlayerSender;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
+import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -51,6 +52,8 @@ public record RegionCommand(RegionManager plugin) {
     public static String regionInfo = "§aRegion §f{region}:\n§f - §aFlags: §f{flags}\n - §aPlayers: §f{players}";
     @Path(value = "messages.region.renamed", options = "fancy")
     public static String regionRenamed = "§aRegion renamed to §f{region}";
+    @Path(value = "messages.region.updated-position", options = "fancy")
+    public static String updatedPosition = "§aRegion position updated";
 
     @Command(execution = "region list", permission = PERMISSION)
     public void list(GenericSender sender) {
@@ -270,5 +273,32 @@ public record RegionCommand(RegionManager plugin) {
         region.save();
 
         sender.sendMessage(regionRenamed.replace("{region}", region.getName()));
+    }
+
+    @Command(execution = "region <region> update-position", permission = PERMISSION)
+    public void updatePosition(PlayerSender sender, Region region) {
+        if (region == null) {
+            sender.sendMessage(Configuration.Messages.invalidRegion);
+            return;
+        }
+
+        Location[] positions = PlayerUtil.getMarkedPositions(sender.getHandle());
+        if (positions[0] == null || positions[1] == null || !positions[0].getWorld().equals(positions[1].getWorld())) {
+            sender.sendMessage(Configuration.Messages.invalidPositions);
+            return;
+        }
+
+        Vector pos1 = positions[0].toVector();
+        Vector pos2 = positions[1].toVector();
+
+        region.setBounds(pos1, pos2);
+        region.save();
+
+        sender.sendMessage(
+                updatedPosition
+                        .replace("{region}", region.getName())
+                        .replace("{min-pos}", StringUtil.toString(region.getMinPos()))
+                        .replace("{max-pos}", StringUtil.toString(region.getMaxPos()))
+        );
     }
 }

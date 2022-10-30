@@ -119,7 +119,7 @@ public record RegionCommand(RegionManager plugin) {
         sender.sendMessage(regionDeleted.replace("{region}", region.getName()));
     }
 
-    @Command(execution = "region <region> player add <player>", permission = PERMISSION)
+    @Command(execution = "region add <region> <player>", permission = PERMISSION)
     public void playerAdd(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -141,7 +141,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> player remove <player>", permission = PERMISSION)
+    @Command(execution = "region remove <region> <player>", permission = PERMISSION)
     public void playerRemove(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);

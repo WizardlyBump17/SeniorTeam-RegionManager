@@ -5,7 +5,6 @@ import com.wizardlybump17.seniorteam.regionmanager.api.config.Configuration;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.util.bukkit.StringUtil;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +21,7 @@ public record PlayerListener(RegionManager plugin) implements Listener {
         Player player = event.getPlayer();
 
         ItemStack item = event.getItem();
-        if (item == null || event.getHand() != EquipmentSlot.HAND || item.getType() != Material.WOODEN_AXE || !player.hasPermission("regionmanager.admin"))
+        if (item == null || event.getHand() != EquipmentSlot.HAND || !item.isSimilar(Configuration.wand.build()) || !player.hasPermission("regionmanager.admin"))
             return;
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {

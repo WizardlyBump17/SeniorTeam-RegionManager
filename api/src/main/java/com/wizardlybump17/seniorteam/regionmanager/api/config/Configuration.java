@@ -3,10 +3,22 @@ package com.wizardlybump17.seniorteam.regionmanager.api.config;
 import com.wizardlybump17.seniorteam.regionmanager.api.RegionManager;
 import com.wizardlybump17.wlib.config.ConfigInfo;
 import com.wizardlybump17.wlib.config.Path;
+import com.wizardlybump17.wlib.item.ItemBuilder;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Material;
 
 @UtilityClass
+@ConfigInfo(name = "configs/global.yml", holderType = RegionManager.class)
 public class Configuration {
+
+    @Path("wand")
+    public static ItemBuilder wand = new ItemBuilder()
+            .type(Material.STICK)
+            .displayName("§aRegion wand")
+            .lore(
+                    "§7Left-click to set the position 1",
+                    "§7Right-click to set the position 2"
+            );
 
     @UtilityClass
     @ConfigInfo(name = "messages/global.yml", holderType = RegionManager.class)

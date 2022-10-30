@@ -323,4 +323,9 @@ public record RegionCommand(RegionManager plugin) {
 
         new RegionInventory(region, new RegionsInventory(plugin.getRegionCache())).show(sender.getHandle());
     }
+
+    @Command(execution = "region wand", permission = "region.admin.wand", priority = 3)
+    public void wand(PlayerSender sender) {
+        sender.getHandle().getInventory().addItem(Configuration.wand.build().clone());
+    }
 }

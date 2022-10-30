@@ -7,6 +7,8 @@ import com.wizardlybump17.seniorteam.regionmanager.api.region.Region;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.RegionFlag;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.type.RegionFlagType;
 import com.wizardlybump17.seniorteam.regionmanager.api.region.flag.value.RegionFlagValue;
+import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionInventory;
+import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionPlayersInventory;
 import com.wizardlybump17.seniorteam.regionmanager.inventory.region.RegionsInventory;
 import com.wizardlybump17.seniorteam.regionmanager.util.PlayerUtil;
 import com.wizardlybump17.wlib.command.Command;
@@ -119,7 +121,7 @@ public record RegionCommand(RegionManager plugin) {
         sender.sendMessage(regionDeleted.replace("{region}", region.getName()));
     }
 
-    @Command(execution = "region add <region> <player>", permission = PERMISSION)
+    @Command(execution = "region <region> player add <player>", permission = PERMISSION)
     public void playerAdd(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -141,7 +143,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region remove <region> <player>", permission = PERMISSION)
+    @Command(execution = "region <region> player remove <player>", permission = PERMISSION)
     public void playerRemove(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -300,5 +302,25 @@ public record RegionCommand(RegionManager plugin) {
                         .replace("{min-pos}", StringUtil.toString(region.getMinPos()))
                         .replace("{max-pos}", StringUtil.toString(region.getMaxPos()))
         );
+    }
+
+    @Command(execution = "region <region> player", permission = PERMISSION)
+    public void players(PlayerSender sender, Region region) {
+        if (region == null) {
+            sender.sendMessage(Configuration.Messages.invalidRegion);
+            return;
+        }
+
+        new RegionPlayersInventory(region, new RegionInventory(region, new RegionsInventory(plugin.getRegionCache()))).show(sender.getHandle(), 0);
+    }
+
+    @Command(execution = "region <region>", permission = PERMISSION)
+    public void region(PlayerSender sender, Region region) {
+        if (region == null) {
+            sender.sendMessage(Configuration.Messages.invalidRegion);
+            return;
+        }
+
+        new RegionInventory(region, new RegionsInventory(plugin.getRegionCache())).show(sender.getHandle());
     }
 }

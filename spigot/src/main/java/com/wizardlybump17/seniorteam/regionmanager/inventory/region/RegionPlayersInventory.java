@@ -121,7 +121,7 @@ public record RegionPlayersInventory(Region region, RegionInventory previous) {
                                 if (event.getClick() != ClickType.DOUBLE_CLICK)
                                     return;
 
-                                ((Player) event.getWhoClicked()).performCommand("region remove \"" + region.getName() + "\" \"" + player + "\"");
+                                ((Player) event.getWhoClicked()).performCommand("region \"" + region.getName() + "\" \"player\" \"remove\" \"" + player + "\"");
                                 show(((Player) event.getWhoClicked()), inventory.getCurrentPage());
                             }
                     ),
@@ -172,7 +172,7 @@ public record RegionPlayersInventory(Region region, RegionInventory previous) {
         inventory.stopListeners();
 
         Bukkit.getScheduler().runTask(RegionManager.getInstance(), () -> {
-            player.performCommand("region add \"" + region.getName() + "\" \"" + target.getUniqueId() + "\"");
+            player.performCommand("region \"" + region.getName() + "\" \"player\" \"add\" \"" + target.getUniqueId() + "\"");
             show(player, inventory.getCurrentPage());
         });
     }

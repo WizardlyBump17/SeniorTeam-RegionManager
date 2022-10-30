@@ -8,13 +8,13 @@ import org.bukkit.entity.Player;
 @UtilityClass
 public class RegionFlagTypes {
 
-    public static final RegionFlagType BREAK_BLOCK = createBooleanFlagType("BREAK_BLOCK", "");
-    public static final RegionFlagType PLACE_BLOCK = createBooleanFlagType("PLACE_BLOCK", "");
-    public static final RegionFlagType LEFT_CLICK_AIR = createBooleanFlagType("LEFT_CLICK_AIR", "");
-    public static final RegionFlagType LEFT_CLICK_BLOCK = createBooleanFlagType("LEFT_CLICK_BLOCK", "");
-    public static final RegionFlagType RIGHT_CLICK_AIR = createBooleanFlagType("RIGHT_CLICK_AIR", "");
-    public static final RegionFlagType RIGHT_CLICK_BLOCK = createBooleanFlagType("RIGHT_CLICK_BLOCK", "");
-    public static final RegionFlagType INTERACT_PHYSICAL = createBooleanFlagType("INTERACT_PHYSICAL", "");
+    public static final RegionFlagType BREAK_BLOCK = createBooleanFlagType("BREAK_BLOCK", "region.bypass");
+    public static final RegionFlagType PLACE_BLOCK = createBooleanFlagType("PLACE_BLOCK", "region.bypass");
+    public static final RegionFlagType LEFT_CLICK_AIR = createBooleanFlagType("LEFT_CLICK_AIR", "region.bypass");
+    public static final RegionFlagType LEFT_CLICK_BLOCK = createBooleanFlagType("LEFT_CLICK_BLOCK", "region.bypass");
+    public static final RegionFlagType RIGHT_CLICK_AIR = createBooleanFlagType("RIGHT_CLICK_AIR", "region.bypass");
+    public static final RegionFlagType RIGHT_CLICK_BLOCK = createBooleanFlagType("RIGHT_CLICK_BLOCK", "region.bypass");
+    public static final RegionFlagType INTERACT_PHYSICAL = createBooleanFlagType("INTERACT_PHYSICAL", "region.bypass");
 
     private static RegionFlagType createBooleanFlagType(String name, String permission) {
         return new RegionFlagType() {
@@ -37,7 +37,7 @@ public class RegionFlagTypes {
                     return booleanValue.getValue();
                 if (permission.isEmpty())
                     return player.isOp() || booleanValue.getValue();
-                return booleanValue.getValue();
+                return booleanValue.getValue() || player.hasPermission(permission);
             }
         };
     }

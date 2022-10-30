@@ -57,7 +57,7 @@ public record RegionCommand(RegionManager plugin) {
     @Path(value = "messages.region.updated-position", options = "fancy")
     public static String updatedPosition = "§aRegion position updated";
 
-    @Command(execution = "region list", permission = PERMISSION)
+    @Command(execution = "region list", permission = "region.admin.menu")
     public void list(GenericSender sender) {
         sender.sendMessage(
                 regionList
@@ -70,12 +70,12 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region list", permission = PERMISSION, priority = 3)
+    @Command(execution = "region list", permission = "region.admin.menu", priority = 3)
     public void list(PlayerSender sender) {
         new RegionsInventory(plugin.getRegionCache()).show(sender.getHandle());
     }
 
-    @Command(execution = "region create <name>", permission = PERMISSION)
+    @Command(execution = "region create <name>", permission = "region.admin.create")
     public void create(PlayerSender sender, String name) {
         RegionCache cache = plugin.getRegionCache();
 
@@ -107,7 +107,7 @@ public record RegionCommand(RegionManager plugin) {
         sender.sendMessage(regionCreated.replace("{region}", region.getName()));
     }
 
-    @Command(execution = "region delete <region>", permission = PERMISSION)
+    @Command(execution = "region delete <region>", permission = "region.admin.delete")
     public void delete(GenericSender sender, Region region) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -121,7 +121,7 @@ public record RegionCommand(RegionManager plugin) {
         sender.sendMessage(regionDeleted.replace("{region}", region.getName()));
     }
 
-    @Command(execution = "region <region> player add <player>", permission = PERMISSION)
+    @Command(execution = "region <region> player add <player>", permission = "region.admin.player.add")
     public void playerAdd(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -143,7 +143,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> player remove <player>", permission = PERMISSION)
+    @Command(execution = "region <region> player remove <player>", permission = "region.admin.player.remove")
     public void playerRemove(GenericSender sender, Region region, OfflinePlayer player) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -165,7 +165,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> flag set <type> <value>", permission = PERMISSION)
+    @Command(execution = "region <region> flag set <type> <value>", permission = "region.admin.flag.set")
     public void flagSet(GenericSender sender, Region region, RegionFlagType type, RegionFlagValue<?> value) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -204,7 +204,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> flag unset <type>", permission = PERMISSION)
+    @Command(execution = "region <region> flag unset <type>", permission = "region.admin.flag.unset")
     public void flagUnset(GenericSender sender, Region region, RegionFlagType type) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -236,7 +236,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> info", permission = PERMISSION)
+    @Command(execution = "region <region> info", permission = "region.admin.info")
     public void info(GenericSender sender, Region region) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -257,7 +257,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> rename <name>", permission = PERMISSION)
+    @Command(execution = "region <region> rename <name>", permission = "region.admin.rename")
     public void rename(GenericSender sender, Region region, String newName) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -277,7 +277,7 @@ public record RegionCommand(RegionManager plugin) {
         sender.sendMessage(regionRenamed.replace("{region}", region.getName()));
     }
 
-    @Command(execution = "region <region> update-position", permission = PERMISSION)
+    @Command(execution = "region <region> update-position", permission = "region.admin.updateposition")
     public void updatePosition(PlayerSender sender, Region region) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -304,7 +304,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region <region> player", permission = PERMISSION)
+    @Command(execution = "region <region> player", permission = "region.admin.menu")
     public void players(PlayerSender sender, Region region) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);
@@ -314,7 +314,7 @@ public record RegionCommand(RegionManager plugin) {
         new RegionPlayersInventory(region, new RegionInventory(region, new RegionsInventory(plugin.getRegionCache()))).show(sender.getHandle(), 0);
     }
 
-    @Command(execution = "region <region>", permission = PERMISSION)
+    @Command(execution = "region <region>", permission = "region.admin.menu")
     public void region(PlayerSender sender, Region region) {
         if (region == null) {
             sender.sendMessage(Configuration.Messages.invalidRegion);

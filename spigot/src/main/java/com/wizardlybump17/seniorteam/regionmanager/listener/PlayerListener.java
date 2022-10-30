@@ -21,7 +21,7 @@ public record PlayerListener(RegionManager plugin) implements Listener {
         Player player = event.getPlayer();
 
         ItemStack item = event.getItem();
-        if (item == null || event.getHand() != EquipmentSlot.HAND || !item.isSimilar(Configuration.wand.build()) || !player.hasPermission("regionmanager.admin"))
+        if (item == null || event.getHand() != EquipmentSlot.HAND || !item.isSimilar(Configuration.wand.build()) || !player.hasPermission("region.admin.wand"))
             return;
 
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {

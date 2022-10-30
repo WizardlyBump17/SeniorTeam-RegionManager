@@ -50,7 +50,7 @@ public class Configuration {
             @Path(value = "type-new-value", options = "fancy")
             public static String typeNewValue = "\n§aType the new value for the flag §f{flag}\n§aType §ccancel §ato cancel\n ";
             @Path(value = "mark-positions", options = "fancy")
-            public static String markPositions = "\n§aMark the positions\nLeft-click to set the position 1\nRight-click to set the position 2\n\nType §bsave §ato save\n§aType §ccancel §ato cancel\n ";
+            public static String markPositions = "\n§aUse the wand item to set the positions\nType §bsave §ato save\n§aType §ccancel §ato cancel\n ";
         }
     }
 }

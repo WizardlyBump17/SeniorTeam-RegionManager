@@ -199,6 +199,7 @@ public record RegionInventory(Region region, RegionsInventory previous) {
                     inventory.setData("action", "positions");
 
                     entity.sendMessage(Configuration.Messages.Region.markPositions);
+                    entity.getInventory().addItem(Configuration.wand.build().clone());
                     entity.closeInventory();
                 }
         );

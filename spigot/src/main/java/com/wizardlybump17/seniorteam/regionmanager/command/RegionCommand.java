@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 @ConfigInfo(name = "configs/commands/region.yml", holderType = RegionManager.class)
 public record RegionCommand(RegionManager plugin) {
 
-    public static final String PERMISSION = "regionmanager.admin";
-
     @Path(value = "messages.region.list", options = "fancy")
     public static String regionList = "§aRegions: §f{regions}";
     @Path(value = "messages.region.already-exists", options = "fancy")
@@ -70,7 +68,7 @@ public record RegionCommand(RegionManager plugin) {
         );
     }
 
-    @Command(execution = "region list", permission = "region.admin.menu", priority = 3)
+    @Command(execution = "region", permission = "region.admin.menu")
     public void list(PlayerSender sender) {
         new RegionsInventory(plugin.getRegionCache()).show(sender.getHandle());
     }
